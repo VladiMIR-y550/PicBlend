@@ -13,12 +13,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ua.smartmir.picblend.R
+import ua.smartmir.picblend.core.hasRequiredCameraPermission
 import ua.smartmir.picblend.ui.common.BarIconState
+import ua.smartmir.picblend.ui.common.CameraPermissionRequest
 
 @Composable
 fun HomeScreen(
@@ -28,30 +31,45 @@ fun HomeScreen(
     onExitClick: () -> Unit,
     updateBarIconsState: (List<BarIconState>) -> Unit
 ) {
+    val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     LaunchedEffect(null) {
         updateBarIconsState(
             listOf(
                 BarIconState(
                     imageVectorId = R.drawable.share_line,
                     onClick = {}
-                ))
+                )
+            )
+        )
+    }
+    if (uiState.isPermissionNeeded) {
+        CameraPermissionRequest(
+            onDismiss = viewModel::resetPermissionNeededState
         )
     }
 
     HomeUi(
         modifier = modifier,
-        onCameraClick = onCameraClick,
-        onGalleryClick = {}
+        onCameraClick = {
+            if (context.hasRequiredCameraPermission()) {
+                onCameraClick.invoke()
+            } else {
+                viewModel.launchRequestPermission()
+            }
+        },
+        onGalleryClick = {},//todo
+        onNetworkClick = {}//todo
     )
-
 }
 
 @Composable
 fun HomeUi(
     modifier: Modifier = Modifier,
     onCameraClick: () -> Unit,
-    onGalleryClick: () -> Unit
+    onGalleryClick: () -> Unit,
+    onNetworkClick: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -99,7 +117,7 @@ fun HomeUi(
                 modifier = modifier
                     .fillMaxWidth()
                     .weight(1F),
-                onClick = onCameraClick
+                onClick = onNetworkClick
             ) {
                 Icon(
                     painter = painterResource(R.drawable.button_internet),
@@ -116,6 +134,7 @@ fun HomeUi(
 fun HomeUiPreview() {
     HomeUi(
         onCameraClick = {},
-        onGalleryClick = {}
+        onGalleryClick = {},
+        onNetworkClick = {}
     )
 }

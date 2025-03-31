@@ -1,5 +1,6 @@
 package ua.smartmir.picblend.ui.main
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
@@ -50,7 +51,7 @@ fun NavigationScreen(
                 HomeScreen(
                     modifier = modifier,
                     viewModel = hiltViewModel<HomeViewModel>(),
-                    onCameraClick = {}, //todo
+                    onCameraClick = { Log.d("TAG_MY_TEST_CAMERA", "NavigationScreen: onCameraClick")}, //todo
                     onExitClick = onExitApp,
                     updateBarIconsState = mainViewModel::updateBarIcons
                 )

@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">PicBlend</string>
     <string name="home">Home</string>
+    <string name="system_dialog_title_need_access">Permission is needed</string>
+    <string name="system_dialog_title_go_to_settings">Go to settings</string>
+    <string name="system_dialog_text_camera_access_required">In order to take a photo, we need access to your camera. Please grant access to continue.</string>
+    <string name="system_dialog_text_go_to_camera_app_settings">Camera permission is denied. Please go to the app settings and grant permission.</string>
+    <string name="ok">Ok</string>
 </resources>
