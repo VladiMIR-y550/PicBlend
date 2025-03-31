@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PicBlend</string>
+    <string name="home">Home</string>
+    <string name="system_dialog_title_need_access">Необходимо разрешение</string>
+    <string name="system_dialog_title_go_to_settings">Перейти к настройкам</string>
+    <string name="system_dialog_text_camera_access_required">Чтобы сделать фото, нам нужен доступ к вашей камере. Пожалуйста, предоставьте доступ для продолжения.</string>
+    <string name="system_dialog_text_go_to_camera_app_settings">Доступ к камере отклонен. Пожалуйста, перейдите в настройки приложения и предоставьте доступ.</string>
+    <string name="ok">Хорошо</string>
+</resources>
