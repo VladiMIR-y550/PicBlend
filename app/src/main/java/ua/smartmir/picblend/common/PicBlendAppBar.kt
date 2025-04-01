@@ -1,4 +1,4 @@
-package ua.smartmir.picblend.ui.common
+package ua.smartmir.picblend.common
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxWidth

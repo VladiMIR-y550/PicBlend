@@ -11,6 +11,7 @@ fun PicBlendNavGraph(
     modifier: Modifier = Modifier,
     navHostController: NavHostController,
     homeContent: @Composable () -> Unit,
+    cameraContent: @Composable () -> Unit,
 ) {
     NavHost(
         navController = navHostController,
@@ -19,6 +20,10 @@ fun PicBlendNavGraph(
     ){
         composable(Screens.Home.route) {
             homeContent.invoke()
+        }
+
+        composable(Screens.Camera.route) {
+            cameraContent.invoke()
         }
     }
 }

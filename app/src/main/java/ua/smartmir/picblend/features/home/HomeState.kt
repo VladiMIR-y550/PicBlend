@@ -1,4 +1,4 @@
-package ua.smartmir.picblend.ui.home
+package ua.smartmir.picblend.features.home
 
 import androidx.compose.ui.graphics.ImageBitmap
 import ua.smartmir.picblend.base.ScreenState

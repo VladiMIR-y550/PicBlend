@@ -15,8 +15,8 @@ hiltNavigationCompose = "1.2.0"
 navigationKtx = "2.8.9"
 lifecycle = "2.8.7"
 materialIconsExtendedVersion = "1.7.8"
+coilCompose = "2.4.0"
 cameraVersions = "1.4.2"
-
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -47,6 +47,7 @@ lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel
 lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime", version.ref = "lifecycle" }
 lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycle" }
 lifecycle-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "lifecycle" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "materialIconsExtendedVersion" }
 androidx-camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "cameraVersions" }
 androidx-camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "cameraVersions" }

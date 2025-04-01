@@ -1,10 +1,10 @@
-package ua.smartmir.picblend.ui.main
+package ua.smartmir.picblend.main
 
 import androidx.annotation.StringRes
 import ua.smartmir.picblend.R
 import ua.smartmir.picblend.base.ScreenState
 import ua.smartmir.picblend.navigation.Screens
-import ua.smartmir.picblend.ui.common.BarIconState
+import ua.smartmir.picblend.common.BarIconState
 
 data class MainState(
     val currentScreen: Screens = Screens.Home,
