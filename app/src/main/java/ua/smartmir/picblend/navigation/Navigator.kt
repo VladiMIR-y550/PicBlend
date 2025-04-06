@@ -14,6 +14,7 @@ interface Navigator {
     fun popBackStack()
     fun canNavigationBack(): Boolean
     fun <T> saveDataToBackStackEntry(key: String, data: T)
+    @Composable fun <T> getDataFromBackStackEntryFlow(key: String, defaultValue: T, onGetData: (value: T) -> Unit)
 
     class Base(
         val navHostController: NavHostController
@@ -55,23 +56,22 @@ interface Navigator {
         }
 
         @Composable
-        fun <T> getDataFromBackStackEntryFlow(
+        override fun <T> getDataFromBackStackEntryFlow(
             key: String,
             defaultValue: T,
-            onGetData: (value: T) -> Unit
+            onGetData: (T) -> Unit
         ) {
             navHostController.currentBackStackEntry?.savedStateHandle?.getStateFlow(
                 key,
                 defaultValue
-            )
-                ?.collectAsEffect { value ->
-                    value.takeIf {
-                        value != defaultValue
-                    }?.also { result ->
-                        onGetData(result)
-                        navHostController.currentBackStackEntry?.savedStateHandle?.remove<T>(key)
-                    }
+            )?.collectAsEffect { value ->
+                value.takeIf {
+                    value != defaultValue
+                }?.also { result ->
+                    onGetData(result)
+                    navHostController.currentBackStackEntry?.savedStateHandle?.remove<T>(key)
                 }
+            }
         }
     }
 }

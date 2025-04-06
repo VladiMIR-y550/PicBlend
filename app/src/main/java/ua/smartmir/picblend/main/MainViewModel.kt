@@ -15,7 +15,6 @@ class MainViewModel @Inject constructor() : BaseViewModel<MainState>(MainState()
         _uiState.update {
             it.copy(
                 currentScreen = screen,
-                title = (screen as Screens.BaseScreens).titleStringId,
                 barIcons = listOf(),
                 onBackPressure = null
             )

@@ -12,8 +12,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ua.smartmir.picblend.common.PicBlendAppBar
 import ua.smartmir.picblend.features.camera.presentation.CameraScreen
 import ua.smartmir.picblend.features.camera.presentation.CameraViewModel
-import ua.smartmir.picblend.features.home.HomeScreen
-import ua.smartmir.picblend.features.home.HomeViewModel
+import ua.smartmir.picblend.features.gallery.GalleryPickerScreen
+import ua.smartmir.picblend.features.home.presentation.HomeScreen
+import ua.smartmir.picblend.features.home.presentation.HomeViewModel
 import ua.smartmir.picblend.navigation.Navigator
 import ua.smartmir.picblend.navigation.PicBlendNavGraph
 import ua.smartmir.picblend.navigation.Screens
@@ -51,9 +52,13 @@ fun MainScreen(
                 mainViewModel.updateCurrentScreen(Screens.Home)
                 HomeScreen(
                     modifier = modifier,
+                    navigator = navigator,
                     viewModel = hiltViewModel<HomeViewModel>(),
                     onCameraClick = {
                         navigator.navigateTo(Screens.Camera.getRouteWithParams())
+                    },
+                    onGalleryClick = {
+                        navigator.navigateTo(Screens.Gallery.getRouteWithParams())
                     },
                     onExitClick = onExitApp,
                     updateBarIconsState = mainViewModel::updateBarIcons
@@ -64,6 +69,15 @@ fun MainScreen(
                 CameraScreen(
                     modifier = modifier,
                     viewModel = hiltViewModel<CameraViewModel>()
+                )
+            },
+            galleryContent = {
+                mainViewModel.updateCurrentScreen(Screens.Gallery)
+                GalleryPickerScreen(
+                    onImagePicked = {
+                        navigator.saveDataToBackStackEntry(Screens.KEY_RETURNED_IMAGE, it)
+                        navigator.popBackStack()
+                    }
                 )
             }
         )

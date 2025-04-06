@@ -7,6 +7,7 @@ import dagger.hilt.components.SingletonComponent
 import ua.smartmir.picblend.features.camera.data.saveimage.ImageRepository
 import ua.smartmir.picblend.features.camera.data.camera.CameraRepository
 import ua.smartmir.picblend.features.camera.data.filters.FiltersRepository
+import ua.smartmir.picblend.features.home.data.GalleryRepository
 import javax.inject.Singleton
 
 @Module
@@ -23,4 +24,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindFilterRepository(filtersRepository: FiltersRepository.Base): FiltersRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindGalleryRepository(galleryRepository: GalleryRepository.Base): GalleryRepository
 }

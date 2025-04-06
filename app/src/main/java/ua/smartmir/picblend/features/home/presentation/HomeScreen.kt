@@ -1,5 +1,7 @@
-package ua.smartmir.picblend.features.home
+package ua.smartmir.picblend.features.home.presentation
 
+import android.graphics.Bitmap
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,6 +15,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,18 +25,29 @@ import ua.smartmir.picblend.R
 import ua.smartmir.picblend.common.BarIconState
 import ua.smartmir.picblend.common.CameraPermissionRequest
 import ua.smartmir.picblend.core.hasRequiredCameraPermission
+import ua.smartmir.picblend.navigation.Navigator
+import ua.smartmir.picblend.navigation.Screens.Companion.KEY_RETURNED_IMAGE
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel,
+    navigator: Navigator,
     onCameraClick: () -> Unit,
+    onGalleryClick: () -> Unit,
     onExitClick: () -> Unit,
     updateBarIconsState: (List<BarIconState>) -> Unit
 ) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    navigator.getDataFromBackStackEntryFlow<Uri?>(
+        KEY_RETURNED_IMAGE, defaultValue = null
+    ) { imageUri ->
+        viewModel.loadImageFromGallery(
+            imageUri ?: return@getDataFromBackStackEntryFlow
+        )
+    }
     LaunchedEffect(null) {
         updateBarIconsState(
             listOf(
@@ -52,6 +66,7 @@ fun HomeScreen(
 
     HomeUi(
         modifier = modifier,
+        imageBitmap = uiState.bitmap,
         onCameraClick = {
             if (context.hasRequiredCameraPermission()) {
                 onCameraClick.invoke()
@@ -59,7 +74,7 @@ fun HomeScreen(
                 viewModel.launchRequestPermission()
             }
         },
-        onGalleryClick = {},//todo
+        onGalleryClick = onGalleryClick,
         onNetworkClick = {}//todo
     )
 }
@@ -67,6 +82,7 @@ fun HomeScreen(
 @Composable
 fun HomeUi(
     modifier: Modifier = Modifier,
+    imageBitmap: Bitmap?,
     onCameraClick: () -> Unit,
     onGalleryClick: () -> Unit,
     onNetworkClick: () -> Unit
@@ -76,7 +92,15 @@ fun HomeUi(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Image(
+        imageBitmap?.let {
+            Image(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .weight(1F),
+                bitmap = imageBitmap.asImageBitmap(),
+                contentDescription = null
+            )
+        } ?: Image(
             modifier = modifier
                 .fillMaxWidth()
                 .weight(1F),
@@ -133,6 +157,7 @@ fun HomeUi(
 @Composable
 fun HomeUiPreview() {
     HomeUi(
+        imageBitmap = null,
         onCameraClick = {},
         onGalleryClick = {},
         onNetworkClick = {}
