@@ -6,8 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import ua.smartmir.picblend.ui.main.MainViewModel
-import ua.smartmir.picblend.ui.main.NavigationScreen
+import ua.smartmir.picblend.main.MainViewModel
+import ua.smartmir.picblend.main.MainScreen
 import ua.smartmir.picblend.ui.theme.PicBlendTheme
 
 @AndroidEntryPoint
@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PicBlendTheme {
-                NavigationScreen(
+                MainScreen(
                     mainViewModel = hiltViewModel<MainViewModel>(),
                     onExitApp = { finish() },
                 )

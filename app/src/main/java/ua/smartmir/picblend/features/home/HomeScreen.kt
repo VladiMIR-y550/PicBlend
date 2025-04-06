@@ -1,4 +1,4 @@
-package ua.smartmir.picblend.ui.home
+package ua.smartmir.picblend.features.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -19,9 +19,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ua.smartmir.picblend.R
+import ua.smartmir.picblend.common.BarIconState
+import ua.smartmir.picblend.common.CameraPermissionRequest
 import ua.smartmir.picblend.core.hasRequiredCameraPermission
-import ua.smartmir.picblend.ui.common.BarIconState
-import ua.smartmir.picblend.ui.common.CameraPermissionRequest
 
 @Composable
 fun HomeScreen(

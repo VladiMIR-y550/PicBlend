@@ -6,6 +6,7 @@ import ua.smartmir.picblend.R
 interface Screens {
     companion object {
         private const val HOME_SCREEN = "HOME_SCREEN"
+        private const val CAMERA_SCREEN = "CAMERA_SCREEN"
     }
 
     fun getRouteWithParams(vararg values: String): String
@@ -32,4 +33,5 @@ interface Screens {
     }
 
     object Home : BaseScreens(HOME_SCREEN, emptyList(), R.string.home)
+    object Camera : BaseScreens(CAMERA_SCREEN, emptyList(), R.string.camera)
 }

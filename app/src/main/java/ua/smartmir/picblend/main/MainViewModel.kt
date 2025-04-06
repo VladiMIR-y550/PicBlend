@@ -1,11 +1,11 @@
-package ua.smartmir.picblend.ui.main
+package ua.smartmir.picblend.main
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.update
 import ua.smartmir.picblend.base.BaseViewModel
 import ua.smartmir.picblend.navigation.Navigator
 import ua.smartmir.picblend.navigation.Screens
-import ua.smartmir.picblend.ui.common.BarIconState
+import ua.smartmir.picblend.common.BarIconState
 import javax.inject.Inject
 
 @HiltViewModel

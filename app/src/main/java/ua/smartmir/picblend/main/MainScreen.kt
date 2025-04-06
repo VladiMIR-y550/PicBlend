@@ -1,6 +1,5 @@
-package ua.smartmir.picblend.ui.main
+package ua.smartmir.picblend.main
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
@@ -10,16 +9,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import ua.smartmir.picblend.common.PicBlendAppBar
+import ua.smartmir.picblend.features.camera.presentation.CameraScreen
+import ua.smartmir.picblend.features.camera.presentation.CameraViewModel
+import ua.smartmir.picblend.features.home.HomeScreen
+import ua.smartmir.picblend.features.home.HomeViewModel
 import ua.smartmir.picblend.navigation.Navigator
 import ua.smartmir.picblend.navigation.PicBlendNavGraph
 import ua.smartmir.picblend.navigation.Screens
 import ua.smartmir.picblend.navigation.rememberNavigator
-import ua.smartmir.picblend.ui.common.PicBlendAppBar
-import ua.smartmir.picblend.ui.home.HomeScreen
-import ua.smartmir.picblend.ui.home.HomeViewModel
 
 @Composable
-fun NavigationScreen(
+fun MainScreen(
     mainViewModel: MainViewModel,
     onExitApp: () -> Unit,
     modifier: Modifier = Modifier,
@@ -51,9 +52,18 @@ fun NavigationScreen(
                 HomeScreen(
                     modifier = modifier,
                     viewModel = hiltViewModel<HomeViewModel>(),
-                    onCameraClick = { Log.d("TAG_MY_TEST_CAMERA", "NavigationScreen: onCameraClick")}, //todo
+                    onCameraClick = {
+                        navigator.navigateTo(Screens.Camera.getRouteWithParams())
+                    },
                     onExitClick = onExitApp,
                     updateBarIconsState = mainViewModel::updateBarIcons
+                )
+            },
+            cameraContent = {
+                mainViewModel.updateCurrentScreen(Screens.Camera)
+                CameraScreen(
+                    modifier = modifier,
+                    viewModel = hiltViewModel<CameraViewModel>()
                 )
             }
         )

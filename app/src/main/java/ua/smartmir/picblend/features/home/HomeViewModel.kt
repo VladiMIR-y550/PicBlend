@@ -1,6 +1,5 @@
-package ua.smartmir.picblend.ui.home
+package ua.smartmir.picblend.features.home
 
-import android.util.Log
 import kotlinx.coroutines.flow.update
 import ua.smartmir.picblend.base.BaseViewModel
 
