@@ -1,5 +1,6 @@
 package ua.smartmir.picblend.features.home.presentation
 
+import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -13,6 +14,8 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PhotoFilter
+import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -23,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -31,11 +35,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ua.smartmir.picblend.R
+import ua.smartmir.picblend.base.HomeEffect
 import ua.smartmir.picblend.common.BarIconState
 import ua.smartmir.picblend.common.CameraPermissionRequest
 import ua.smartmir.picblend.common.FiltersRow
 import ua.smartmir.picblend.common.filters.domain.model.FilterType
 import ua.smartmir.picblend.core.hasRequiredCameraPermission
+import ua.smartmir.picblend.core.toast
 import ua.smartmir.picblend.features.camera.presentation.FilterStateEntity
 import ua.smartmir.picblend.navigation.Navigator
 import ua.smartmir.picblend.navigation.Screens.Companion.KEY_RETURNED_IMAGE
@@ -60,16 +66,42 @@ fun HomeScreen(
             imageUri ?: return@getDataFromBackStackEntryFlow
         )
     }
-    LaunchedEffect(null) {
+    LaunchedEffect(Unit) {
         updateBarIconsState(
             listOf(
                 BarIconState(
-                    imageVectorId = R.drawable.share_line,
+                    imageVector = Icons.Default.Save,
                     onClick = {}
+                ),
+                BarIconState(
+                    imageVector = Icons.Default.Share,
+                    onClick = viewModel::shareImage
                 )
             )
         )
     }
+
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                is HomeEffect.ShareImage -> {
+                    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                        type = "image/png"
+                        putExtra(Intent.EXTRA_STREAM, effect.uri)
+                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    }
+                    viewModel::clearSharedImage
+                    context.startActivity(
+                        Intent.createChooser(shareIntent, context.getString(R.string.share_image))
+                    )
+                }
+
+                is HomeEffect.ShowToast -> context::toast
+            }
+        }
+    }
+
+
     if (uiState.isPermissionNeeded) {
         CameraPermissionRequest(
             onDismiss = viewModel::resetPermissionNeededState
@@ -78,7 +110,7 @@ fun HomeScreen(
 
     HomeUi(
         modifier = modifier,
-        imageBitmap = uiState.image,
+        imageBitmap = uiState.image?.asImageBitmap(),
         filters = uiState.filterList,
         isPhotoFiltersShowing = uiState.isPhotoFiltersShowing,
         onImageFiltersClick = viewModel::showPhotoFilters,
@@ -114,7 +146,9 @@ fun HomeUi(
                 .padding(16.dp)
         ) {
             MainImageFrame(
-                modifier = modifier.weight(1F).fillMaxSize(),
+                modifier = modifier
+                    .weight(1F)
+                    .fillMaxSize(),
                 imageBitmap = imageBitmap,
                 onImageFiltersClick = onImageFiltersClick,
             )

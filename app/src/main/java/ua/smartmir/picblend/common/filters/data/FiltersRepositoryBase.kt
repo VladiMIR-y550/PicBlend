@@ -1,11 +1,11 @@
-package ua.smartmir.picblend.common.filters.domain.repository
+package ua.smartmir.picblend.common.filters.data
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import ua.smartmir.picblend.common.filters.data.FiltersRepository
 import ua.smartmir.picblend.common.filters.domain.model.FilterDomainEntity
 import ua.smartmir.picblend.common.filters.domain.model.FilterType
+import ua.smartmir.picblend.common.filters.domain.repository.FiltersRepository
 import javax.inject.Inject
 
 class FiltersRepositoryBase @Inject constructor() : FiltersRepository {

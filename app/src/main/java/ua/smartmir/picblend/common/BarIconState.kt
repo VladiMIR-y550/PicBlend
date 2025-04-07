@@ -1,8 +1,8 @@
 package ua.smartmir.picblend.common
 
-import androidx.annotation.DrawableRes
+import androidx.compose.ui.graphics.vector.ImageVector
 
 data class BarIconState(
-    @DrawableRes val imageVectorId: Int,
+    val imageVector: ImageVector,
     val onClick: () -> Unit
 )

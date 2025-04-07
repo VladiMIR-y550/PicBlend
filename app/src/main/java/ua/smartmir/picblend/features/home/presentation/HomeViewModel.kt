@@ -2,11 +2,8 @@ package ua.smartmir.picblend.features.home.presentation
 
 import android.graphics.Bitmap
 import android.net.Uri
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import jakarta.inject.Named
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -16,35 +13,44 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import ua.smartmir.picblend.base.BaseViewModel
+import ua.smartmir.picblend.base.HomeEffect
+import ua.smartmir.picblend.base.HomeEffect.ShareImage
+import ua.smartmir.picblend.base.HomeEffect.ShowToast
 import ua.smartmir.picblend.common.filters.domain.model.FilterType
 import ua.smartmir.picblend.common.filters.domain.usecase.ApplyFilterUseCase
 import ua.smartmir.picblend.common.filters.domain.usecase.ChooseFilterUseCase
-import ua.smartmir.picblend.di.EditorFilters
-import ua.smartmir.picblend.features.camera.domain.SaveImageUseCase
+import ua.smartmir.picblend.common.saveimage.data.model.SavedImageResult.ErrorImageInfo
+import ua.smartmir.picblend.common.saveimage.data.model.SavedImageResult.SuccessImageInfo
+import ua.smartmir.picblend.common.saveimage.domain.usecase.SaveImageToCashDirUseCase
+import ua.smartmir.picblend.di.Editor
 import ua.smartmir.picblend.features.camera.presentation.mapToStateEntity
 import ua.smartmir.picblend.features.home.domain.PickImageUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    @EditorFilters applyFilterUseCase: ApplyFilterUseCase,
-    @EditorFilters private val filtersUseCase: ChooseFilterUseCase,
+    @Editor applyFilterUseCase: ApplyFilterUseCase,
+    @Editor private val filtersUseCase: ChooseFilterUseCase,
     private val pickImageUseCase: PickImageUseCase,
-    private val saveImageUseCase: SaveImageUseCase
-) : ViewModel() {
+    private val saveImageUseCase: SaveImageToCashDirUseCase
+) : BaseViewModel<HomeEffect>() {
 
     private val image = MutableStateFlow<Bitmap?>(null)
+    private val uriCashedImage = MutableStateFlow<Uri?>(null)
     private val isPermissionNeeded = MutableStateFlow<Boolean>(false)
     private val isFiltersShowed = MutableStateFlow<Boolean>(false)
 
     val uiState = combine(
         image.filterNotNull(),
+        uriCashedImage,
         filtersUseCase.generateFilterPreviews(image),
         isFiltersShowed,
         isPermissionNeeded,
-    ) { image, filters, isFiltersShowed, isPermissionNeeded ->
+    ) { image, uri, filters, isFiltersShowed, isPermissionNeeded ->
         HomeState(
-            image = applyFilterUseCase.applySelectedFilter(image)?.asImageBitmap(),
+            image = applyFilterUseCase.applySelectedFilter(image),
+            uriCashedImage = uri,
             filterList = filters.map { it.mapToStateEntity() },
             isPermissionNeeded = isPermissionNeeded,
             isPhotoFiltersShowing = isFiltersShowed
@@ -74,5 +80,22 @@ class HomeViewModel @Inject constructor(
 
     fun changeFilter(filterType: FilterType) {
         filtersUseCase.updateChosenFilter(filterType)
+    }
+
+    fun shareImage() {
+        viewModelScope.launch(Dispatchers.IO) {
+            uiState.value.image?.let {
+                saveImageUseCase.saveImage(it) { result ->
+                    when (result) {
+                        is SuccessImageInfo -> sendEffect(ShareImage(result.uri))
+                        is ErrorImageInfo -> sendEffect(ShowToast(result.errorMessage))
+                    }
+                }
+            }
+        }
+    }
+
+    fun clearSharedImage() {
+        uriCashedImage.update { null }
     }
 }

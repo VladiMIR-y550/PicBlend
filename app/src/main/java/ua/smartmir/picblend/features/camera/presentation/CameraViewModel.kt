@@ -1,10 +1,8 @@
 package ua.smartmir.picblend.features.camera.presentation
 
 import android.net.Uri
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import jakarta.inject.Named
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,22 +12,27 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import ua.smartmir.picblend.base.BaseViewModel
+import ua.smartmir.picblend.base.CameraEffect
+import ua.smartmir.picblend.base.CameraEffect.ShowToast
 import ua.smartmir.picblend.common.filters.domain.model.FilterType
 import ua.smartmir.picblend.common.filters.domain.usecase.ApplyFilterUseCase
 import ua.smartmir.picblend.common.filters.domain.usecase.ChooseFilterUseCase
-import ua.smartmir.picblend.di.CameraFilters
-import ua.smartmir.picblend.features.camera.data.camera.CameraController
+import ua.smartmir.picblend.common.saveimage.data.model.SavedImageResult.ErrorImageInfo
+import ua.smartmir.picblend.common.saveimage.data.model.SavedImageResult.SuccessImageInfo
+import ua.smartmir.picblend.common.saveimage.domain.usecase.SaveImageToGalleryUseCase
+import ua.smartmir.picblend.di.Camera
+import ua.smartmir.picblend.features.camera.data.CameraController
 import ua.smartmir.picblend.features.camera.domain.LaunchCameraUseCase
-import ua.smartmir.picblend.features.camera.domain.SaveImageUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class CameraViewModel @Inject constructor(
-    @CameraFilters applyFilterUseCase: ApplyFilterUseCase,
-    @CameraFilters private val filtersUseCase: ChooseFilterUseCase,
+    @Camera applyFilterUseCase: ApplyFilterUseCase,
+    @Camera private val filtersUseCase: ChooseFilterUseCase,
     private val launchCameraUseCase: LaunchCameraUseCase,
-    private val saveImageUseCase: SaveImageUseCase
-) : ViewModel() {
+    private val saveImageUseCase: SaveImageToGalleryUseCase
+) : BaseViewModel<CameraEffect>() {
 
     private val isFiltersShowed = MutableStateFlow<Boolean>(false)
     private val lastImageUri = MutableStateFlow<Uri?>(null)
@@ -46,7 +49,7 @@ class CameraViewModel @Inject constructor(
             image = image,
             filterList = filters.map { it.mapToStateEntity() },
             isPhotoFiltersShowing = isFiltersShowed,
-            lastImageUri = lastImageUri
+            lastImageUri = lastImageUri,
         )
     }.flowOn(Dispatchers.Default)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), CameraState())
@@ -58,8 +61,11 @@ class CameraViewModel @Inject constructor(
     fun takePhoto() {
         viewModelScope.launch(Dispatchers.IO) {
             uiState.value.image?.let {
-                saveImageUseCase.saveImageToGallery(it) { uri ->
-                    lastImageUri.update { uri }
+                saveImageUseCase.saveImage(it) { result ->
+                    when (result) {
+                        is SuccessImageInfo -> lastImageUri.update { result.uri }
+                        is ErrorImageInfo -> sendEffect(ShowToast(result.errorMessage))
+                    }
                 }
             }
         }

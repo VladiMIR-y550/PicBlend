@@ -10,13 +10,16 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import java.io.File
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
@@ -43,6 +46,29 @@ internal fun Context.findActivity(): Activity {
         context = context.baseContext
     }
     throw IllegalStateException("Permissions should be called in the context of an Activity")
+}
+
+fun Context.toast(message: ToastMessageType?) {
+    when (message) {
+        is ToastMessageType.StringValue -> Toast.makeText(this, message.value, Toast.LENGTH_SHORT)
+            .show()
+
+        is ToastMessageType.IntValue -> Toast.makeText(
+            this,
+            getString(message.value),
+            Toast.LENGTH_SHORT
+        ).show()
+
+        else -> {}
+    }
+}
+
+fun Context.getCacheImageUri(file: File): Uri {
+    return FileProvider.getUriForFile(
+        this,
+        "${this.packageName}.fileprovider",
+        file
+    )
 }
 
 fun Activity.openAppSettings() {

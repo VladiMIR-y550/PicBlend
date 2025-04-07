@@ -1,4 +1,4 @@
-package ua.smartmir.picblend.features.camera.data.camera
+package ua.smartmir.picblend.features.camera.data
 
 import androidx.camera.view.LifecycleCameraController
 
