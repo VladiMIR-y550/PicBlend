@@ -1,4 +1,4 @@
-package ua.smartmir.picblend.features.camera.domain
+package ua.smartmir.picblend.common.filters.domain.model
 
 import android.graphics.ColorMatrix
 

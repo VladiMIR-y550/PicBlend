@@ -1,4 +1,4 @@
-package ua.smartmir.picblend.features.camera.domain
+package ua.smartmir.picblend.common.filters.utils
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -8,6 +8,7 @@ import androidx.core.graphics.createBitmap
 import androidx.core.graphics.scale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import ua.smartmir.picblend.common.filters.domain.model.FilterType
 import javax.inject.Inject
 
 interface FilterProcessor {

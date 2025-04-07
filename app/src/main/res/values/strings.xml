@@ -11,4 +11,6 @@
     <string name="take_photo">Take photo</string>
     <string name="photo_filters">Photo filters</string>
     <string name="photo_filter_name">Photo filter %s</string>
+    <string name="uploaded_image">Uploaded image</string>
+    <string name="default_image">Default image</string>
 </resources>

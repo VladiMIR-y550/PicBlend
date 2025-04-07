@@ -1,15 +1,12 @@
 package ua.smartmir.picblend.features.camera.data.camera
 
 import android.graphics.Bitmap
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.shareIn
 import javax.inject.Inject
 
 interface CameraRepository {
     fun lunch(): CameraController
-    fun imageDate(): Flow<Bitmap?>
+    fun photo(): Flow<Bitmap?>
 
     class Base @Inject constructor(
         private val cameraDataSource: CameraDataSource,
@@ -19,7 +16,7 @@ interface CameraRepository {
             return CameraController(cameraDataSource.launchCamera())
         }
 
-        override fun imageDate(): Flow<Bitmap?> {
+        override fun photo(): Flow<Bitmap?> {
             return cameraDataSource.originalBitmapFlow
         }
     }

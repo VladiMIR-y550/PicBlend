@@ -7,9 +7,7 @@ import dagger.hilt.components.SingletonComponent
 @Module(
     includes = [
         RepositoryModule::class,
-        ImageModule::class,
-        CameraModule::class,
-        UseCaseModule::class
+        DomainModule::class,
     ]
 )
 @InstallIn(SingletonComponent::class)

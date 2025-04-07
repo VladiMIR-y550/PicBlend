@@ -5,8 +5,8 @@ import android.net.Uri
 import ua.smartmir.picblend.base.ScreenState
 
 data class CameraState(
+    val image: Bitmap? = null,
+    val filterList: List<FilterStateEntity> = emptyList(),
     val lastImageUri: Uri? = null,
-    val mainPreviewBitmap: Bitmap? = null,
     val isPhotoFiltersShowing: Boolean = false,
-    val filterList: List<FilterStateEntity> = emptyList()
 ) : ScreenState
