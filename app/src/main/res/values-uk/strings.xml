@@ -12,4 +12,6 @@
     <string name="take_photo">Зробити фотографію</string>
     <string name="photo_filters">Фото фільтри</string>
     <string name="photo_filter_name">Фото фільтр %s</string>
+    <string name="uploaded_image">Завантажена картинка</string>
+    <string name="default_image">Зображення за замовчуванням</string>
 </resources>

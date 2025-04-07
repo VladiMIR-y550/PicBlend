@@ -1,30 +1,42 @@
 package ua.smartmir.picblend.features.home.presentation
 
-import android.graphics.Bitmap
 import android.net.Uri
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PhotoFilter
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ua.smartmir.picblend.R
 import ua.smartmir.picblend.common.BarIconState
 import ua.smartmir.picblend.common.CameraPermissionRequest
+import ua.smartmir.picblend.common.FiltersRow
+import ua.smartmir.picblend.common.filters.domain.model.FilterType
 import ua.smartmir.picblend.core.hasRequiredCameraPermission
+import ua.smartmir.picblend.features.camera.presentation.FilterStateEntity
 import ua.smartmir.picblend.navigation.Navigator
 import ua.smartmir.picblend.navigation.Screens.Companion.KEY_RETURNED_IMAGE
 
@@ -66,7 +78,11 @@ fun HomeScreen(
 
     HomeUi(
         modifier = modifier,
-        imageBitmap = uiState.bitmap,
+        imageBitmap = uiState.image,
+        filters = uiState.filterList,
+        isPhotoFiltersShowing = uiState.isPhotoFiltersShowing,
+        onImageFiltersClick = viewModel::showPhotoFilters,
+        onFilterSelected = viewModel::changeFilter,
         onCameraClick = {
             if (context.hasRequiredCameraPermission()) {
                 onCameraClick.invoke()
@@ -82,74 +98,116 @@ fun HomeScreen(
 @Composable
 fun HomeUi(
     modifier: Modifier = Modifier,
-    imageBitmap: Bitmap?,
+    imageBitmap: ImageBitmap?,
+    filters: List<FilterStateEntity>,
+    isPhotoFiltersShowing: Boolean,
+    onImageFiltersClick: () -> Unit,
+    onFilterSelected: (FilterType) -> Unit,
     onCameraClick: () -> Unit,
     onGalleryClick: () -> Unit,
     onNetworkClick: () -> Unit
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        imageBitmap?.let {
-            Image(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .weight(1F),
-                bitmap = imageBitmap.asImageBitmap(),
-                contentDescription = null
-            )
-        } ?: Image(
+    Box(modifier = modifier.fillMaxSize()) {
+        Column(
             modifier = modifier
-                .fillMaxWidth()
-                .weight(1F),
-            painter = painterResource(R.drawable.shape),
-            contentDescription = null
-        )
-
-        Row(
-            modifier = modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.Bottom
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
-            Button(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .weight(1F),
-                onClick = onCameraClick
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.button_camera),
-                    contentDescription = null
-                )
-            }
+            MainImageFrame(
+                modifier = modifier.weight(1F).fillMaxSize(),
+                imageBitmap = imageBitmap,
+                onImageFiltersClick = onImageFiltersClick,
+            )
 
-            Button(
+            Row(
                 modifier = modifier
-                    .fillMaxWidth()
-                    .weight(1F),
-                onClick = onGalleryClick
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.Bottom
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.button_gallery),
-                    contentDescription = null
-                )
-            }
+                Button(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .weight(1F),
+                    onClick = onCameraClick
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.button_camera),
+                        contentDescription = null
+                    )
+                }
 
-            Button(
+                Button(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .weight(1F),
+                    onClick = onGalleryClick
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.button_gallery),
+                        contentDescription = null
+                    )
+                }
+
+                Button(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .weight(1F),
+                    onClick = onNetworkClick
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.button_internet),
+                        contentDescription = null
+                    )
+                }
+            }
+        }
+        if (isPhotoFiltersShowing) {
+            FiltersRow(
                 modifier = modifier
-                    .fillMaxWidth()
-                    .weight(1F),
-                onClick = onNetworkClick
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 40.dp),
+                filters = filters,
+                onFilterSelected = onFilterSelected
+            )
+        }
+    }
+}
+
+@Composable
+fun MainImageFrame(
+    modifier: Modifier = Modifier,
+    imageBitmap: ImageBitmap?,
+    onImageFiltersClick: () -> Unit,
+) {
+    imageBitmap?.let {
+        Box(
+            modifier = modifier
+                .wrapContentSize()
+                .padding(16.dp)
+                .border(width = 1.dp, color = Color.DarkGray, shape = RoundedCornerShape(8.dp))
+        ) {
+            Image(
+                modifier = modifier,
+                bitmap = imageBitmap,
+                contentDescription = stringResource(R.string.uploaded_image),
+                contentScale = ContentScale.Fit
+            )
+            IconButton(
+                onClick = onImageFiltersClick,
+                modifier = Modifier.align(Alignment.TopEnd)
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.button_internet),
-                    contentDescription = null
+                    imageVector = Icons.Default.PhotoFilter,
+                    contentDescription = stringResource(R.string.photo_filters)
                 )
             }
         }
-    }
+    } ?: Image(
+        modifier = modifier
+            .fillMaxWidth(),
+        painter = painterResource(R.drawable.shape),
+        contentDescription = stringResource(R.string.default_image)
+    )
 }
 
 
@@ -158,8 +216,12 @@ fun HomeUi(
 fun HomeUiPreview() {
     HomeUi(
         imageBitmap = null,
+        filters = emptyList(),
         onCameraClick = {},
+        onFilterSelected = {},
         onGalleryClick = {},
-        onNetworkClick = {}
+        onNetworkClick = {},
+        onImageFiltersClick = {},
+        isPhotoFiltersShowing = true
     )
 }

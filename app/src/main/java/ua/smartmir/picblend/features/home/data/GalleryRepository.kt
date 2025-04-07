@@ -14,8 +14,7 @@ interface GalleryRepository {
 
     class Base @Inject constructor(
         private val contentResolver: ContentResolver
-    ) :
-        GalleryRepository {
+    ) : GalleryRepository {
         override suspend fun loadBitmapFromUri(uri: Uri): Bitmap? {
             return withContext(Dispatchers.IO) {
                 val inputStream = contentResolver.openInputStream(uri)

@@ -1,7 +1,6 @@
-package ua.smartmir.picblend.features.camera.domain
+package ua.smartmir.picblend.common.filters.domain.model
 
 import android.graphics.Bitmap
-import ua.smartmir.picblend.features.camera.domain.FilterType
 
 data class FilterDomainEntity(
     val filterType: FilterType = FilterType.None,
