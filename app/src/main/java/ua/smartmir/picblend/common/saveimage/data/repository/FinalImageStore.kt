@@ -32,7 +32,7 @@ class FinalImageStore @Inject constructor(
             val uri = context.getCacheImageUri(file)
             onPhotoSaved(SuccessImageInfo(name = finalName, uri = uri))
         } catch (e: Exception) {
-            ErrorImageInfo(error = e, errorMessage = "FinalImageStore: ${e.message}")
+            onPhotoSaved(ErrorImageInfo(error = e, errorMessage = "FinalImageStore: ${e.message}"))
         }
     }
 }
