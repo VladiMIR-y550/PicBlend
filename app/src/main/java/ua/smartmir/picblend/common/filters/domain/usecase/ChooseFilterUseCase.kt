@@ -5,7 +5,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.Flow
-import ua.smartmir.picblend.common.filters.data.FiltersRepository
+import ua.smartmir.picblend.common.filters.domain.repository.FiltersRepository
 import ua.smartmir.picblend.common.filters.domain.model.FilterDomainEntity
 import ua.smartmir.picblend.common.filters.domain.model.FilterType
 import ua.smartmir.picblend.common.filters.utils.FilterProcessor

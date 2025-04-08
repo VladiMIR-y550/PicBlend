@@ -33,7 +33,6 @@ import ua.smartmir.picblend.core.openAppSettings
 
 @Composable
 fun CameraPermissionRequest(
-//    onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
     BaseMultiplePermissions(

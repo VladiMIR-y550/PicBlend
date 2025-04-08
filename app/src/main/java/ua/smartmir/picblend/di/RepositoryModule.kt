@@ -4,8 +4,10 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ua.smartmir.picblend.features.camera.data.camera.CameraRepository
-import ua.smartmir.picblend.features.camera.data.saveimage.ImageRepository
+import ua.smartmir.picblend.common.saveimage.data.repository.CameraPhotoStorage
+import ua.smartmir.picblend.common.saveimage.data.repository.FinalImageStore
+import ua.smartmir.picblend.common.saveimage.domain.repository.ImageRepository
+import ua.smartmir.picblend.features.camera.data.CameraRepository
 import ua.smartmir.picblend.features.home.data.GalleryRepository
 import javax.inject.Singleton
 
@@ -13,8 +15,14 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
     @Binds
+    @Camera
     @Singleton
-    abstract fun bindImageRepository(imageRepository: ImageRepository.Base): ImageRepository
+    abstract fun bindCameraPhotoImageRepository(imageRepository: CameraPhotoStorage): ImageRepository
+
+    @Binds
+    @Editor
+    @Singleton
+    abstract fun bindFinalImageRepository(imageRepository: FinalImageStore): ImageRepository
 
     @Binds
     @Singleton

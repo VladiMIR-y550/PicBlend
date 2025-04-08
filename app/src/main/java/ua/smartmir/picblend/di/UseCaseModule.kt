@@ -4,46 +4,48 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
-import ua.smartmir.picblend.common.filters.data.FiltersRepository
+import ua.smartmir.picblend.common.filters.domain.repository.FiltersRepository
 import ua.smartmir.picblend.common.filters.domain.usecase.ApplyFilterUseCase
 import ua.smartmir.picblend.common.filters.domain.usecase.ChooseFilterUseCase
+import ua.smartmir.picblend.common.saveimage.domain.repository.ImageRepository
+import ua.smartmir.picblend.common.saveimage.domain.usecase.SaveImageToGalleryUseCase
 
 @Module
 @InstallIn(ViewModelComponent::class)
 object UseCaseModule {
 
     @Provides
-    @CameraFilters
+    @Camera
     fun provideCameraApplyFiltersUseCase(
         factory: ApplyFilterUseCase.Factory,
-        @CameraFilters filtersRepository: FiltersRepository
+        @Camera filtersRepository: FiltersRepository
     ): ApplyFilterUseCase = factory.create(filtersRepository)
 
     @Provides
-    @EditorFilters
+    @Editor
     fun provideEditorApplyFiltersUseCase(
         factory: ApplyFilterUseCase.Factory,
-        @EditorFilters filtersRepository: FiltersRepository
+        @Editor filtersRepository: FiltersRepository
     ): ApplyFilterUseCase = factory.create(filtersRepository)
 
     @Provides
-    @CameraApplyFilter
+    @ApplyFilter
     fun provideCameraApplyFilterUseCase(
         factory: ApplyFilterUseCase.Factory,
-        @EditorFilters filtersRepository: FiltersRepository
+        @Editor filtersRepository: FiltersRepository
     ): ApplyFilterUseCase = factory.create(filtersRepository)
 
     @Provides
-    @CameraFilters
+    @Camera
     fun provideCameraChooseFiltersUseCase(
         factory: ChooseFilterUseCase.Factory,
-        @CameraFilters filtersRepository: FiltersRepository
+        @Camera filtersRepository: FiltersRepository
     ): ChooseFilterUseCase = factory.create(filtersRepository)
 
     @Provides
-    @EditorFilters
+    @Editor
     fun provideEditorChooseFiltersUseCase(
         factory: ChooseFilterUseCase.Factory,
-        @EditorFilters filtersRepository: FiltersRepository
+        @Editor filtersRepository: FiltersRepository
     ): ChooseFilterUseCase = factory.create(filtersRepository)
 }

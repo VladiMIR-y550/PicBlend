@@ -14,4 +14,5 @@
     <string name="photo_filter_name">Фото фильтр %s</string>
     <string name="uploaded_image">Загруженная картинка</string>
     <string name="default_image">Картинка по умолчанию</string>
+    <string name="share_image">Поделиться изображением</string>
 </resources>

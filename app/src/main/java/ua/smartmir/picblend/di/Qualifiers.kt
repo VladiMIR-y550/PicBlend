@@ -8,12 +8,12 @@ annotation class ApplicationScope()
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class CameraApplyFilter
+annotation class ApplyFilter
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class CameraFilters
+annotation class Camera
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class EditorFilters
+annotation class Editor

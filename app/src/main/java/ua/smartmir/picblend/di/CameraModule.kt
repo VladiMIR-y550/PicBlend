@@ -4,8 +4,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ua.smartmir.picblend.features.camera.data.camera.CameraDataSource
-import javax.inject.Singleton
+import ua.smartmir.picblend.features.camera.data.CameraDataSource
 
 @Module
 @InstallIn(SingletonComponent::class)

@@ -2,9 +2,12 @@ package ua.smartmir.picblend.common
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -53,7 +56,7 @@ fun PicBlendAppBar(
                 barIcons.forEach {
                     IconButton(onClick = it.onClick) {
                         Icon(
-                            painter = painterResource(it.imageVectorId),
+                            imageVector = it.imageVector,
                             contentDescription = null
                         )
                     }
@@ -72,7 +75,11 @@ fun PicBlendAppBarPreview() {
         navigateUp = {},
         barIcons = listOf(
             BarIconState(
-                imageVectorId = R.drawable.share_line,
+                imageVector = Icons.Default.Save,
+                onClick = {}
+            ),
+            BarIconState(
+                imageVector = Icons.Default.Share,
                 onClick = {}
             )
         )
