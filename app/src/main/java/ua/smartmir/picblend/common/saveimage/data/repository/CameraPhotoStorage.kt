@@ -37,7 +37,12 @@ class CameraPhotoStorage @Inject constructor(
             }
             onPhotoSaved(SuccessImageInfo(name = fileName, uri = imageUri))
         } catch (e: IOException) {
-            ErrorImageInfo(error = e, errorMessage = "CameraPhotoStorage: ${e.message}")
+            onPhotoSaved(
+                ErrorImageInfo(
+                    error = e,
+                    errorMessage = "CameraPhotoStorage: ${e.message}"
+                )
+            )
         }
     }
 }

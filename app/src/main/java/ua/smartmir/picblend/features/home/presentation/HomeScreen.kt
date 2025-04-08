@@ -72,7 +72,7 @@ fun HomeScreen(
             listOf(
                 BarIconState(
                     imageVector = Icons.Default.Save,
-                    onClick = {}
+                    onClick = viewModel::saveImage
                 ),
                 BarIconState(
                     imageVector = Icons.Default.Share,
@@ -91,13 +91,12 @@ fun HomeScreen(
                         putExtra(Intent.EXTRA_STREAM, effect.uri)
                         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                     }
-                    viewModel::clearSharedImage
                     context.startActivity(
                         Intent.createChooser(shareIntent, context.getString(R.string.share_image))
                     )
                 }
 
-                is ShowToast -> context::toast
+                is ShowToast -> context.toast(effect.message)
             }
         }
     }

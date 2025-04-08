@@ -48,20 +48,7 @@ internal fun Context.findActivity(): Activity {
     throw IllegalStateException("Permissions should be called in the context of an Activity")
 }
 
-fun Context.toast(message: ToastMessageType?) {
-    when (message) {
-        is ToastMessageType.StringValue -> Toast.makeText(this, message.value, Toast.LENGTH_SHORT)
-            .show()
-
-        is ToastMessageType.IntValue -> Toast.makeText(
-            this,
-            getString(message.value),
-            Toast.LENGTH_SHORT
-        ).show()
-
-        else -> {}
-    }
-}
+fun Context.toast(message: String) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 
 fun Context.getCacheImageUri(file: File): Uri {
     return FileProvider.getUriForFile(
@@ -78,7 +65,6 @@ fun Activity.openAppSettings() {
     ).also(::startActivity)
 }
 
-//val cameraPermissionsToRequest = arrayOf(CAMERA)
 val cameraPermissionsToRequest = mutableListOf(
     CAMERA
 ).apply {

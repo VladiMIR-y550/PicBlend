@@ -23,6 +23,7 @@ import ua.smartmir.picblend.common.filters.domain.usecase.ChooseFilterUseCase
 import ua.smartmir.picblend.common.saveimage.data.model.SavedImageResult.ErrorImageInfo
 import ua.smartmir.picblend.common.saveimage.data.model.SavedImageResult.SuccessImageInfo
 import ua.smartmir.picblend.common.saveimage.domain.usecase.SaveImageToCashDirUseCase
+import ua.smartmir.picblend.common.saveimage.domain.usecase.SaveImageToGalleryUseCase
 import ua.smartmir.picblend.di.Editor
 import ua.smartmir.picblend.features.camera.presentation.mapToStateEntity
 import ua.smartmir.picblend.features.home.domain.PickImageUseCase
@@ -33,7 +34,8 @@ class HomeViewModel @Inject constructor(
     @Editor applyFilterUseCase: ApplyFilterUseCase,
     @Editor private val filtersUseCase: ChooseFilterUseCase,
     private val pickImageUseCase: PickImageUseCase,
-    private val saveImageUseCase: SaveImageToCashDirUseCase
+    private val saveImageUseCase: SaveImageToCashDirUseCase,
+    private val saveImageGalleryUseCase: SaveImageToGalleryUseCase
 ) : BaseViewModel<HomeEffect>() {
 
     private val image = MutableStateFlow<Bitmap?>(null)
@@ -95,7 +97,16 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun clearSharedImage() {
-        uriCashedImage.update { null }
+    fun saveImage() {
+        viewModelScope.launch(Dispatchers.IO) {
+            uiState.value.image?.let {
+                saveImageGalleryUseCase.saveImage(it) { result ->
+                    when (result) {
+                        is SuccessImageInfo -> sendEffect(ShowToast("Saved ${result.name}"))
+                        is ErrorImageInfo -> sendEffect(ShowToast(result.errorMessage))
+                    }
+                }
+            }
+        }
     }
 }
