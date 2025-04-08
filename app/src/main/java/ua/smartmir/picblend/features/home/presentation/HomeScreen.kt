@@ -35,7 +35,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ua.smartmir.picblend.R
-import ua.smartmir.picblend.base.HomeEffect
+import ua.smartmir.picblend.base.HomeEffect.ShareImage
+import ua.smartmir.picblend.base.HomeEffect.ShowToast
 import ua.smartmir.picblend.common.BarIconState
 import ua.smartmir.picblend.common.CameraPermissionRequest
 import ua.smartmir.picblend.common.FiltersRow
@@ -84,7 +85,7 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                is HomeEffect.ShareImage -> {
+                is ShareImage -> {
                     val shareIntent = Intent(Intent.ACTION_SEND).apply {
                         type = "image/png"
                         putExtra(Intent.EXTRA_STREAM, effect.uri)
@@ -96,7 +97,7 @@ fun HomeScreen(
                     )
                 }
 
-                is HomeEffect.ShowToast -> context::toast
+                is ShowToast -> context::toast
             }
         }
     }

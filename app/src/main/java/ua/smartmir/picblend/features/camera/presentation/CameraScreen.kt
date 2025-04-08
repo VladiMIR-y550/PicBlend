@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import ua.smartmir.picblend.R
-import ua.smartmir.picblend.base.HomeEffect
+import ua.smartmir.picblend.base.CameraEffect.ShowToast
 import ua.smartmir.picblend.common.FiltersRow
 import ua.smartmir.picblend.core.toast
 
@@ -50,7 +50,7 @@ fun CameraScreen(modifier: Modifier = Modifier, viewModel: CameraViewModel) {
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                is HomeEffect.ShowToast -> context::toast
+                is ShowToast -> context::toast
             }
         }
     }
