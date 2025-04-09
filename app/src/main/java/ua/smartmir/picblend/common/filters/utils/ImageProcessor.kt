@@ -11,11 +11,11 @@ import kotlinx.coroutines.withContext
 import ua.smartmir.picblend.common.filters.domain.model.FilterType
 import javax.inject.Inject
 
-interface FilterProcessor {
+interface ImageProcessor {
     suspend fun applyFilter(image: Bitmap, filter: FilterType): Bitmap
     suspend fun resizeWithAspectRatio(image: Bitmap, targetSize: Int): Bitmap
 
-    class PhotoFilterProcessor @Inject constructor() : FilterProcessor {
+    class PhotoFilterProcessor @Inject constructor() : ImageProcessor {
 
         override suspend fun applyFilter(
             image: Bitmap,

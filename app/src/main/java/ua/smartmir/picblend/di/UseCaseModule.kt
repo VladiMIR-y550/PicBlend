@@ -7,8 +7,6 @@ import dagger.hilt.android.components.ViewModelComponent
 import ua.smartmir.picblend.common.filters.domain.repository.FiltersRepository
 import ua.smartmir.picblend.common.filters.domain.usecase.ApplyFilterUseCase
 import ua.smartmir.picblend.common.filters.domain.usecase.ChooseFilterUseCase
-import ua.smartmir.picblend.common.saveimage.domain.repository.ImageRepository
-import ua.smartmir.picblend.common.saveimage.domain.usecase.SaveImageToGalleryUseCase
 
 @Module
 @InstallIn(ViewModelComponent::class)

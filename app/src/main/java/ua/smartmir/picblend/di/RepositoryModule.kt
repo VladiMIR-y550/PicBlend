@@ -9,6 +9,7 @@ import ua.smartmir.picblend.common.saveimage.data.repository.FinalImageStore
 import ua.smartmir.picblend.common.saveimage.domain.repository.ImageRepository
 import ua.smartmir.picblend.features.camera.data.CameraRepository
 import ua.smartmir.picblend.features.home.data.GalleryRepository
+import ua.smartmir.picblend.features.remote.data.repository.RemoteImagesRepository
 import javax.inject.Singleton
 
 @Module
@@ -31,4 +32,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindGalleryRepository(galleryRepository: GalleryRepository.Base): GalleryRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindRemoteImagesRepository(remoteImagesRepository: RemoteImagesRepository.UnsplashImagesRepository): RemoteImagesRepository
 }

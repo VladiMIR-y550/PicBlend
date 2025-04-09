@@ -4,7 +4,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ua.smartmir.picblend.common.filters.utils.FilterProcessor
+import ua.smartmir.picblend.common.filters.utils.ImageProcessor
+import ua.smartmir.picblend.features.remote.domain.BitmapManager
 import javax.inject.Singleton
 
 @Module
@@ -13,5 +14,9 @@ abstract class DomainModule {
 
     @Binds
     @Singleton
-    abstract fun bindFilterProcessor(filterProcessor: FilterProcessor.PhotoFilterProcessor): FilterProcessor
+    abstract fun bindFilterProcessor(filterProcessor: ImageProcessor.PhotoFilterProcessor): ImageProcessor
+
+    @Binds
+    @Singleton
+    abstract fun bindBitmapManager(bitmapManager: BitmapManager.CoilBitmapManager): BitmapManager
 }

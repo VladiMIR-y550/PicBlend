@@ -14,4 +14,11 @@
     <string name="uploaded_image">Uploaded image</string>
     <string name="default_image">Default image</string>
     <string name="share_image">Share image</string>
+    <string name="witрout_description">Without description</string>
+    <string name="invalid_request">Invalid request</string>
+    <string name="unauthorized">Unauthorized</string>
+    <string name="server_error">Server error</string>
+    <string name="rate_limit_exceeded">Rate Limit Exceeded</string>
+    <string name="error">Error %s</string>
+    <string name="no_internet_connection">No internet connection</string>
 </resources>

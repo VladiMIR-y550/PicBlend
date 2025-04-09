@@ -15,4 +15,11 @@
     <string name="uploaded_image">Загруженная картинка</string>
     <string name="default_image">Картинка по умолчанию</string>
     <string name="share_image">Поделиться изображением</string>
+    <string name="witрout_description">Без описания</string>
+    <string name="invalid_request">Неверный запрос</string>
+    <string name="unauthorized">Не авторизован</string>
+    <string name="server_error">Ошибка сервера</string>
+    <string name="rate_limit_exceeded">Превышен лимит запросов</string>
+    <string name="error">Ошибка %s</string>
+    <string name="no_internet_connection">Нет подключения к интернету</string>
 </resources>
