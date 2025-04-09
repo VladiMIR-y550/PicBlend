@@ -8,13 +8,13 @@ import kotlinx.coroutines.flow.Flow
 import ua.smartmir.picblend.common.filters.domain.repository.FiltersRepository
 import ua.smartmir.picblend.common.filters.domain.model.FilterDomainEntity
 import ua.smartmir.picblend.common.filters.domain.model.FilterType
-import ua.smartmir.picblend.common.filters.utils.FilterProcessor
+import ua.smartmir.picblend.common.filters.utils.ImageProcessor
 import ua.smartmir.picblend.common.filters.utils.processFilteredBitmap
 import ua.smartmir.picblend.common.filters.utils.processFilteredBitmapSingle
 
 class ChooseFilterUseCase @AssistedInject constructor(
     @Assisted private val filtersRepository: FiltersRepository,
-    private val filterProcessor: FilterProcessor
+    private val filterProcessor: ImageProcessor
 ) {
     companion object {
         private const val RESIZE_VALUE = 250

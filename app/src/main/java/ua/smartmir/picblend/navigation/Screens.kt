@@ -5,6 +5,7 @@ interface Screens {
         private const val HOME_SCREEN = "HOME_SCREEN"
         private const val CAMERA_SCREEN = "CAMERA_SCREEN"
         private const val GALLERY_SCREEN = "GALLERY_SCREEN"
+        private const val REMOTE_IMAGES_SCREEN = "REMOTE_IMAGES_SCREEN"
 
         const val KEY_RETURNED_IMAGE = "KEY_GALLERY_IMAGE"
     }
@@ -34,4 +35,5 @@ interface Screens {
     object Home : BaseScreens(HOME_SCREEN, emptyList())
     object Camera : BaseScreens(CAMERA_SCREEN, emptyList())
     object Gallery : BaseScreens(GALLERY_SCREEN, emptyList())
+    object RemoteImagesScreen : BaseScreens(REMOTE_IMAGES_SCREEN, emptyList())
 }

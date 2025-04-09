@@ -28,3 +28,9 @@ sealed interface HomeEffect : UiEffect {
 sealed interface CameraEffect : UiEffect {
     data class ShowToast(val message: String) : CameraEffect
 }
+
+sealed interface RemoteImagesEffect : UiEffect {
+    data class ShowToast(val message: String) : RemoteImagesEffect
+    data class Loading(val isLoading: Boolean) : RemoteImagesEffect
+    data class CachedImage(val uri: Uri) : RemoteImagesEffect
+}

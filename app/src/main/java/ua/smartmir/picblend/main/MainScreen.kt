@@ -15,6 +15,8 @@ import ua.smartmir.picblend.features.camera.presentation.CameraViewModel
 import ua.smartmir.picblend.features.gallery.GalleryPickerScreen
 import ua.smartmir.picblend.features.home.presentation.HomeScreen
 import ua.smartmir.picblend.features.home.presentation.HomeViewModel
+import ua.smartmir.picblend.features.remote.presentation.RemoteImagesScreen
+import ua.smartmir.picblend.features.remote.presentation.RemoteImagesViewModel
 import ua.smartmir.picblend.navigation.Navigator
 import ua.smartmir.picblend.navigation.PicBlendNavGraph
 import ua.smartmir.picblend.navigation.Screens
@@ -60,6 +62,9 @@ fun MainScreen(
                     onGalleryClick = {
                         navigator.navigateTo(Screens.Gallery.getRouteWithParams())
                     },
+                    onRemoteImagesClick = {
+                        navigator.navigateTo(Screens.RemoteImagesScreen.getRouteWithParams())
+                    },
                     onExitClick = onExitApp,
                     updateBarIconsState = mainViewModel::updateBarIcons
                 )
@@ -74,6 +79,16 @@ fun MainScreen(
             galleryContent = {
                 mainViewModel.updateCurrentScreen(Screens.Gallery)
                 GalleryPickerScreen(
+                    onImagePicked = {
+                        navigator.saveDataToBackStackEntry(Screens.KEY_RETURNED_IMAGE, it)
+                        navigator.popBackStack()
+                    }
+                )
+            },
+            remoteImagesContent = {
+                mainViewModel.updateCurrentScreen(Screens.RemoteImagesScreen)
+                RemoteImagesScreen(
+                    viewModel = hiltViewModel<RemoteImagesViewModel>(),
                     onImagePicked = {
                         navigator.saveDataToBackStackEntry(Screens.KEY_RETURNED_IMAGE, it)
                         navigator.popBackStack()

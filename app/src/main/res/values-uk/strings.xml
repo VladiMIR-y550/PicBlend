@@ -15,4 +15,11 @@
     <string name="uploaded_image">Завантажена картинка</string>
     <string name="default_image">Зображення за замовчуванням</string>
     <string name="share_image">Поділитися зображенням</string>
+    <string name="witрout_description">Без опису</string>
+    <string name="invalid_request">Невірний запит</string>
+    <string name="unauthorized">Неавторизовано</string>
+    <string name="server_error">Помилка сервера</string>
+    <string name="rate_limit_exceeded">Перевищено ліміт запитів</string>
+    <string name="error">Помилка %s</string>
+    <string name="no_internet_connection">Немає підключення до інтернету</string>
 </resources>

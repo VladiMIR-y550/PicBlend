@@ -50,7 +50,9 @@ fun CameraScreen(modifier: Modifier = Modifier, viewModel: CameraViewModel) {
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                is ShowToast -> context::toast
+                is ShowToast -> {
+                    context.toast(effect.message)
+                }
             }
         }
     }

@@ -54,6 +54,7 @@ fun HomeScreen(
     navigator: Navigator,
     onCameraClick: () -> Unit,
     onGalleryClick: () -> Unit,
+    onRemoteImagesClick: () -> Unit,
     onExitClick: () -> Unit,
     updateBarIconsState: (List<BarIconState>) -> Unit
 ) {
@@ -123,7 +124,7 @@ fun HomeScreen(
             }
         },
         onGalleryClick = onGalleryClick,
-        onNetworkClick = {}//todo
+        onNetworkClick = onRemoteImagesClick
     )
 }
 
