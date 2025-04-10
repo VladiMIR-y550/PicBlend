@@ -22,4 +22,13 @@
     <string name="rate_limit_exceeded">Превышен лимит запросов</string>
     <string name="error">Ошибка %s</string>
     <string name="no_internet_connection">Нет подключения к интернету</string>
+    <string name="rear_camera">Задняя камера</string>
+    <string name="camera_facing_front_camera">Передняя камера</string>
+    <string name="camera_facing_unknown_camera">Неизвестная камера</string>
+    <string name="camera_type_unknown">Неизвестно</string>
+    <string name="camera_type_ultra_wide">Ультраширокоугольная</string>
+    <string name="camera_type_standard">Обычная</string>
+    <string name="camera_type_telephoto">Телеобъектив</string>
+    <string name="focal_mm">%s мм</string>
+    <string name="camera_description">ID: %s | %s | %s (focal: %s мм)</string>
 </resources>

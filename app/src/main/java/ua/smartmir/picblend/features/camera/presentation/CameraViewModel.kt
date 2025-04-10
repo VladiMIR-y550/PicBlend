@@ -1,8 +1,10 @@
 package ua.smartmir.picblend.features.camera.presentation
 
+import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,6 +26,8 @@ import ua.smartmir.picblend.common.saveimage.domain.usecase.SaveImageToGalleryUs
 import ua.smartmir.picblend.di.Camera
 import ua.smartmir.picblend.features.camera.data.CameraController
 import ua.smartmir.picblend.features.camera.domain.LaunchCameraUseCase
+import ua.smartmir.picblend.features.camera.presentation.model.CameraSettingsUi
+import ua.smartmir.picblend.features.camera.presentation.model.mapTo
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,9 +35,9 @@ class CameraViewModel @Inject constructor(
     @Camera applyFilterUseCase: ApplyFilterUseCase,
     @Camera private val filtersUseCase: ChooseFilterUseCase,
     private val launchCameraUseCase: LaunchCameraUseCase,
-    private val saveImageUseCase: SaveImageToGalleryUseCase
+    private val saveImageUseCase: SaveImageToGalleryUseCase,
+    @ApplicationContext private val context: Context
 ) : BaseViewModel<CameraEffect>() {
-
     private val isFiltersShowed = MutableStateFlow<Boolean>(false)
     private val lastImageUri = MutableStateFlow<Uri?>(null)
 
@@ -44,12 +48,14 @@ class CameraViewModel @Inject constructor(
         filtersUseCase.generateFilterPreviews(launchCameraUseCase.originalBitmapFlow()),
         isFiltersShowed,
         lastImageUri,
-    ) { image, filters, isFiltersShowed, lastImageUri ->
+        launchCameraUseCase.availableCameras(),
+    ) { image, filters, isFiltersShowed, lastImageUri, cameras ->
         CameraState(
             image = image,
             filterList = filters.map { it.mapToStateEntity() },
-            isPhotoFiltersShowing = isFiltersShowed,
             lastImageUri = lastImageUri,
+            isPhotoFiltersShowing = isFiltersShowed,
+            cameras = cameras.map { it.mapTo(context) }
         )
     }.flowOn(Dispatchers.Default)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), CameraState())
@@ -69,6 +75,14 @@ class CameraViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun switchFrontBackCamera() {
+        launchCameraUseCase.switchFrontBackCamera()
+    }
+
+    fun changeCamera(cameraSettings: CameraSettingsUi) {
+        launchCameraUseCase.updateChosenCamera(cameraSettings.cameraId)
     }
 
     fun showPhotoFilters() {

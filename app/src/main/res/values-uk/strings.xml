@@ -22,4 +22,13 @@
     <string name="rate_limit_exceeded">Перевищено ліміт запитів</string>
     <string name="error">Помилка %s</string>
     <string name="no_internet_connection">Немає підключення до інтернету</string>
+    <string name="rear_camera">Задня камера</string>
+    <string name="camera_facing_front_camera">Фронтальна камера</string>
+    <string name="camera_facing_unknown_camera">Невідома камера</string>
+    <string name="camera_type_unknown">Невідомо</string>
+    <string name="camera_type_ultra_wide">Надширококутна</string>
+    <string name="camera_type_standard">Стандартна</string>
+    <string name="camera_type_telephoto">Телеобʼєктив</string>
+    <string name="focal_mm">%s мм</string>
+    <string name="camera_description">ID: %s | %s | %s (focal: %s мм)</string>
 </resources>

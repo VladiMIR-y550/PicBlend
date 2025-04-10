@@ -21,4 +21,14 @@
     <string name="rate_limit_exceeded">Rate Limit Exceeded</string>
     <string name="error">Error %s</string>
     <string name="no_internet_connection">No internet connection</string>
+    <string name="rear_camera">Rear camera</string>
+    <string name="camera_facing_front_camera">Front camera</string>
+    <string name="camera_facing_unknown_camera">Unknown camera</string>
+    <string name="camera_type_unknown">Unknown</string>
+    <string name="camera_type_ultra_wide">Ultra-Wide</string>
+    <string name="camera_type_standard">Standard</string>
+    <string name="camera_type_telephoto">Telephoto</string>
+    <string name="focal_mm">%s mm</string>
+    <string name="dots" translatable="false">...</string>
+    <string name="camera_description" translatable="false">\"ID: %s | %s | %s (focal: %s mm)\"</string>
 </resources>
