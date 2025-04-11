@@ -33,19 +33,22 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import ua.smartmir.picblend.R
+import ua.smartmir.picblend.core.CameraPermissionRequest
 import ua.smartmir.picblend.core.base.HomeEffect.ShareImage
 import ua.smartmir.picblend.core.base.HomeEffect.ShowToast
-import ua.smartmir.picblend.core.presentation.main.BarIconState
-import ua.smartmir.picblend.core.CameraPermissionRequest
-import ua.smartmir.picblend.features.filters.presentation.FiltersRow
-import ua.smartmir.picblend.features.filters.domain.model.FilterType
 import ua.smartmir.picblend.core.hasRequiredCameraPermission
-import ua.smartmir.picblend.core.toast
-import ua.smartmir.picblend.features.camera.presentation.model.FilterUiState
+import ua.smartmir.picblend.core.presentation.main.BarIconState
 import ua.smartmir.picblend.core.presentation.navigation.Navigator
 import ua.smartmir.picblend.core.presentation.navigation.Screens.Companion.KEY_RETURNED_IMAGE
+import ua.smartmir.picblend.core.toast
+import ua.smartmir.picblend.features.camera.presentation.model.FilterUiState
+import ua.smartmir.picblend.features.filters.domain.model.FilterType
+import ua.smartmir.picblend.features.filters.presentation.FiltersRow
 
 @Composable
 fun HomeScreen(
@@ -59,6 +62,7 @@ fun HomeScreen(
     updateBarIconsState: (List<BarIconState>) -> Unit
 ) {
     val context = LocalContext.current
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     navigator.getDataFromBackStackEntryFlow<Uri?>(
@@ -84,20 +88,25 @@ fun HomeScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.effect.collect { effect ->
-            when (effect) {
-                is ShareImage -> {
-                    val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                        type = "image/png"
-                        putExtra(Intent.EXTRA_STREAM, effect.uri)
-                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            viewModel.effect.collect { effect ->
+                when (effect) {
+                    is ShareImage -> {
+                        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                            type = "image/png"
+                            putExtra(Intent.EXTRA_STREAM, effect.uri)
+                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                        }
+                        context.startActivity(
+                            Intent.createChooser(
+                                shareIntent,
+                                context.getString(R.string.share_image)
+                            )
+                        )
                     }
-                    context.startActivity(
-                        Intent.createChooser(shareIntent, context.getString(R.string.share_image))
-                    )
-                }
 
-                is ShowToast -> context.toast(effect.message)
+                    is ShowToast -> context.toast(effect.message)
+                }
             }
         }
     }
@@ -105,13 +114,13 @@ fun HomeScreen(
 
     if (uiState.isPermissionNeeded) {
         CameraPermissionRequest(
-            onDismiss = viewModel::resetPermissionNeededState
+            onDismiss = viewModel::updateIsPermissionNeeded
         )
     }
 
     HomeUi(
         modifier = modifier,
-        imageBitmap = uiState.image?.asImageBitmap(),
+        imageBitmap = uiState.image?.bitmap?.asImageBitmap(),
         filters = uiState.filterList,
         isPhotoFiltersShowing = uiState.isPhotoFiltersShowing,
         onImageFiltersClick = viewModel::showPhotoFilters,
@@ -120,7 +129,7 @@ fun HomeScreen(
             if (context.hasRequiredCameraPermission()) {
                 onCameraClick.invoke()
             } else {
-                viewModel.launchRequestPermission()
+                viewModel.updateIsPermissionNeeded(true)
             }
         },
         onGalleryClick = onGalleryClick,

@@ -31,4 +31,5 @@
     <string name="camera_type_telephoto">Телеобъектив</string>
     <string name="focal_mm">%s мм</string>
     <string name="camera_description">ID: %s | %s | %s (focal: %s мм)</string>
+    <string name="saved">Сохранено %s</string>
 </resources>

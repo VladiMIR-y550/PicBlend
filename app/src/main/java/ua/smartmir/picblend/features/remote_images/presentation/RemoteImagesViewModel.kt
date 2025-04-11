@@ -3,8 +3,6 @@ package ua.smartmir.picblend.features.remote_images.presentation
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ua.smartmir.picblend.core.base.BaseViewModel
@@ -12,13 +10,13 @@ import ua.smartmir.picblend.core.base.RemoteImagesEffect
 import ua.smartmir.picblend.core.base.RemoteImagesEffect.CachedImage
 import ua.smartmir.picblend.core.base.RemoteImagesEffect.Loading
 import ua.smartmir.picblend.core.base.RemoteImagesEffect.ShowToast
-import ua.smartmir.picblend.features.saveimage.data.model.SavedImageResult.ErrorImageInfo
-import ua.smartmir.picblend.features.saveimage.data.model.SavedImageResult.SuccessImageInfo
-import ua.smartmir.picblend.features.saveimage.domain.usecase.SaveImageToCashDirUseCase
 import ua.smartmir.picblend.features.remote_images.domain.usecase.GetBitmapUseCase
 import ua.smartmir.picblend.features.remote_images.domain.usecase.LoadAllImagesUseCase
 import ua.smartmir.picblend.features.remote_images.presentation.model.PhotoUi
 import ua.smartmir.picblend.features.remote_images.presentation.model.mapTo
+import ua.smartmir.picblend.features.saveimage.data.model.SavedImageResult.ErrorImageInfo
+import ua.smartmir.picblend.features.saveimage.data.model.SavedImageResult.SuccessImageInfo
+import ua.smartmir.picblend.features.saveimage.domain.usecase.SaveImageToCashDirUseCase
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,10 +24,12 @@ class RemoteImagesViewModel @Inject constructor(
     private val imagesUseCase: LoadAllImagesUseCase,
     private val bitmapUseCase: GetBitmapUseCase,
     private val saveImageToCashDirUseCase: SaveImageToCashDirUseCase
-) : BaseViewModel<RemoteImagesEffect>() {
+) : BaseViewModel<RemoteImagesState, RemoteImagesEffect>(RemoteImagesState()) {
     private var currentPage = 0
-    private var _uiState = MutableStateFlow<RemoteImagesState>(RemoteImagesState())
-    val uiState get() = _uiState.asStateFlow()
+
+    companion object{
+        const val LOAD_MORE_THRESHOLD_INDEX = 3
+    }
 
     init {
         getMoreImages()

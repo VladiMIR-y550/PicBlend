@@ -1,7 +1,9 @@
 package ua.smartmir.picblend.features.remote_images.presentation.model
 
+import androidx.compose.runtime.Stable
 import ua.smartmir.picblend.features.remote_images.domain.model.UnsplashUser
 
+@Stable
 data class UserUi(
     val id: String,
     val username: String,

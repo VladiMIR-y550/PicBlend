@@ -1,7 +1,9 @@
 package ua.smartmir.picblend.features.remote_images.presentation.model
 
+import androidx.compose.runtime.Stable
 import ua.smartmir.picblend.features.remote_images.domain.model.UnsplashUrls
 
+@Stable
 data class UrlsUi(
     val thumb: String,
     val small: String,
