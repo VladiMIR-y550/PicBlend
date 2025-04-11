@@ -11,11 +11,11 @@ import ua.smartmir.picblend.common.saveimage.domain.repository.ImageRepository
 import java.io.IOException
 import javax.inject.Inject
 
-class CameraPhotoStorage @Inject constructor(
+class GalleryStorage @Inject constructor(
     private val contentResolver: ContentResolver
 ) : ImageRepository {
 
-    override suspend fun saveBitmapToGallery(
+    override suspend fun saveBitmap(
         image: Bitmap,
         fileName: String,
         onPhotoSaved: (SavedImageResult) -> Unit
