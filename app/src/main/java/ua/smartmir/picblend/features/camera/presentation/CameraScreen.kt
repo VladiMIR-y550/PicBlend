@@ -1,6 +1,7 @@
 package ua.smartmir.picblend.features.camera.presentation
 
 import android.net.Uri
+import androidx.activity.compose.BackHandler
 import androidx.camera.view.LifecycleCameraController
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -45,6 +46,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import coil.compose.rememberAsyncImagePainter
 import ua.smartmir.picblend.R
+import ua.smartmir.picblend.core.base.CameraEffect
+import ua.smartmir.picblend.core.base.CameraEffect.ShareImage
 import ua.smartmir.picblend.core.base.CameraEffect.ShowToast
 import ua.smartmir.picblend.core.presentation.StableBitmap
 import ua.smartmir.picblend.core.toast
@@ -54,7 +57,11 @@ import ua.smartmir.picblend.features.filters.domain.model.FilterType
 import ua.smartmir.picblend.features.filters.presentation.FiltersRow
 
 @Composable
-fun CameraScreen(modifier: Modifier = Modifier, viewModel: CameraViewModel) {
+fun CameraScreen(
+    modifier: Modifier = Modifier,
+    viewModel: CameraViewModel,
+    onImagePicked: (Uri?) -> Unit
+) {
     val context = LocalContext.current
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -68,6 +75,10 @@ fun CameraScreen(modifier: Modifier = Modifier, viewModel: CameraViewModel) {
                 }
             }
         }
+    }
+
+    BackHandler {
+        onImagePicked(uiState.lastImageUri)
     }
 
     CameraUi(
