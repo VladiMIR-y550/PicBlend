@@ -26,51 +26,55 @@ fun PicBlendAppBar(
     modifier: Modifier = Modifier,
     @StringRes titleId: Int,
     canNavigationBack: Boolean,
+    showToolbar: Boolean,
     navigateUp: () -> Unit,
     barIcons: List<BarIconState> = emptyList()
 ) {
-    TopAppBar(
-        title = {
-            Text(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(end = 16.dp),
-                text = stringResource(titleId),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-        },
-        modifier = modifier,
-        navigationIcon = {
-            if (canNavigationBack) {
-                IconButton(
-                    onClick = navigateUp
-                ) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
+    if (showToolbar) {
+        TopAppBar(
+            title = {
+                Text(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(end = 16.dp),
+                    text = stringResource(titleId),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            },
+            modifier = modifier,
+            navigationIcon = {
+                if (canNavigationBack) {
+                    IconButton(
+                        onClick = navigateUp
+                    ) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
+                    }
                 }
-            }
-        },
-        actions = {
-            if (barIcons.isNotEmpty()) {
-                barIcons.forEach {
-                    IconButton(onClick = it.onClick) {
-                        Icon(
-                            imageVector = it.imageVector,
-                            contentDescription = null
-                        )
+            },
+            actions = {
+                if (barIcons.isNotEmpty()) {
+                    barIcons.forEach {
+                        IconButton(onClick = it.onClick) {
+                            Icon(
+                                imageVector = it.imageVector,
+                                contentDescription = null
+                            )
+                        }
                     }
                 }
             }
-        }
-    )
+        )
+    }
 }
 
 @Preview
 @Composable
 fun PicBlendAppBarPreview() {
     PicBlendAppBar(
-        titleId = R.string.home,
+        titleId = R.string.app_name,
         canNavigationBack = true,
+        showToolbar = true,
         navigateUp = {},
         barIcons = listOf(
             BarIconState(

@@ -28,7 +28,7 @@ fun CameraPreview(
                 PreviewView(context).apply {
                     this.controller = controller
                     controller?.bindToLifecycle(lifecycleOwner)
-                    scaleType = PreviewView.ScaleType.FILL_CENTER
+                    scaleType = PreviewView.ScaleType.FIT_CENTER
                 }
             },
             modifier = Modifier.fillMaxSize()

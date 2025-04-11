@@ -41,6 +41,7 @@ fun MainScreen(
                 modifier = modifier,
                 titleId = uiState.title,
                 canNavigationBack = navigator.canNavigationBack(),
+                showToolbar = uiState.showToolbar,
                 navigateUp = { mainViewModel.onBackPressure(navigator) },
                 barIcons = uiState.barIcons
             )
@@ -50,6 +51,7 @@ fun MainScreen(
             modifier = modifier.padding(innerPadding),
             navHostController = (navigator as Navigator.Base).navHostController,
             homeContent = {
+                mainViewModel.updateShowToolbar(true)
                 mainViewModel.updateCurrentScreen(Screens.Home)
                 HomeScreen(
                     modifier = modifier,
@@ -69,6 +71,7 @@ fun MainScreen(
                 )
             },
             cameraContent = {
+                mainViewModel.updateShowToolbar(false)
                 mainViewModel.updateCurrentScreen(Screens.Camera)
                 CameraScreen(
                     modifier = modifier,
@@ -76,6 +79,7 @@ fun MainScreen(
                 )
             },
             galleryContent = {
+                mainViewModel.updateShowToolbar(false)
                 mainViewModel.updateCurrentScreen(Screens.Gallery)
                 GalleryPickerScreen(
                     onImagePicked = {
@@ -85,6 +89,7 @@ fun MainScreen(
                 )
             },
             remoteImagesContent = {
+                mainViewModel.updateShowToolbar(false)
                 mainViewModel.updateCurrentScreen(Screens.RemoteImagesScreen)
                 RemoteImagesScreen(
                     viewModel = hiltViewModel<RemoteImagesViewModel>(),
