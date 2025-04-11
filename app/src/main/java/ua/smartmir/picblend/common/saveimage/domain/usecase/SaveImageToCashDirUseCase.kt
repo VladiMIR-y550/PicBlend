@@ -10,7 +10,7 @@ class SaveImageToCashDirUseCase @Inject constructor(
     @Editor private val imageRepository: ImageRepository
 ) {
     suspend fun saveImage(image: Bitmap, onPhotoTaken: (SavedImageResult) -> Unit) {
-        imageRepository.saveBitmapToGallery(
+        imageRepository.saveBitmap(
             image,
             "IMG_${System.currentTimeMillis()}",
             onPhotoTaken

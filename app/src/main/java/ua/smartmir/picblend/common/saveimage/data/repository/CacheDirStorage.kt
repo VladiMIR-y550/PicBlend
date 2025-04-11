@@ -11,17 +11,20 @@ import ua.smartmir.picblend.core.getCacheImageUri
 import java.io.File
 import javax.inject.Inject
 
-class FinalImageStore @Inject constructor(
+class CacheDirStorage @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ImageRepository {
-    override suspend fun saveBitmapToGallery(
+    companion object {
+        private const val CACHE_DIRECTORY = "shared_images"
+    }
+    override suspend fun saveBitmap(
         image: Bitmap,
         fileName: String,
         onPhotoSaved: (SavedImageResult) -> Unit
     ) {
         try {
-            val cachePath = File(context.cacheDir, "shared_images")
-            cachePath.mkdirs()
+            val cachePath = File(context.cacheDir, CACHE_DIRECTORY)
+            clearCacheDirectory(cachePath)
 
             val finalName = "$fileName.png"
             val file = File(cachePath, finalName)
@@ -33,6 +36,14 @@ class FinalImageStore @Inject constructor(
             onPhotoSaved(SuccessImageInfo(name = finalName, uri = uri))
         } catch (e: Exception) {
             onPhotoSaved(ErrorImageInfo(error = e, errorMessage = "FinalImageStore: ${e.message}"))
+        }
+    }
+
+    fun clearCacheDirectory(directory: File) {
+        if (directory.exists()) {
+            directory.listFiles()?.forEach { it.delete() }
+        } else {
+            directory.mkdirs()
         }
     }
 }
