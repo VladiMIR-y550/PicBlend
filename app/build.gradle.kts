@@ -74,8 +74,6 @@ dependencies {
     //Annotation Processing
     implementation(libs.ksp)
     //DI
-    implementation(libs.dagger)
-    ksp(libs.dagger.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.dagger.hilt.android)
     ksp(libs.dagger.hilt.compiler)

@@ -14,7 +14,7 @@
 
     <application
         android:allowBackup="true"
-        android:name=".PicBlendApp"
+        android:name=".core.presentation.main.PicBlendApp"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -24,9 +24,8 @@
         android:theme="@style/Theme.PicBlend"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".core.presentation.main.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.PicBlend">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

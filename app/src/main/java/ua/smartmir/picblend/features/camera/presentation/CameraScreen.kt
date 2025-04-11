@@ -42,11 +42,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import ua.smartmir.picblend.R
-import ua.smartmir.picblend.base.CameraEffect.ShowToast
-import ua.smartmir.picblend.common.FiltersRow
-import ua.smartmir.picblend.common.filters.domain.model.FilterType
+import ua.smartmir.picblend.core.base.CameraEffect.ShowToast
+import ua.smartmir.picblend.features.filters.presentation.FiltersRow
+import ua.smartmir.picblend.features.filters.domain.model.FilterType
 import ua.smartmir.picblend.core.toast
 import ua.smartmir.picblend.features.camera.presentation.model.CameraSettingsUi
+import ua.smartmir.picblend.features.camera.presentation.model.FilterUiState
 
 @Composable
 fun CameraScreen(modifier: Modifier = Modifier, viewModel: CameraViewModel) {
@@ -87,7 +88,7 @@ fun CameraUi(
     image: Bitmap?,
     lastImageUri: Uri?,
     availableCameras: List<CameraSettingsUi>,
-    filterList: List<FilterStateEntity>,
+    filterList: List<FilterUiState>,
     isPhotoFiltersShowing: Boolean,
     cameraController: LifecycleCameraController?,
     switchFrontBackCamera: () -> Unit,
@@ -258,10 +259,10 @@ fun CameraUiPreview() {
             )
         ),
         filterList = listOf(
-            FilterStateEntity(isSelected = true, filterType = FilterType.None),
-            FilterStateEntity(filterType = FilterType.INVERT),
-            FilterStateEntity(filterType = FilterType.GRAYSCALE),
-            FilterStateEntity(filterType = FilterType.SEPIA)
+            FilterUiState(isSelected = true, filterType = FilterType.None),
+            FilterUiState(filterType = FilterType.INVERT),
+            FilterUiState(filterType = FilterType.GRAYSCALE),
+            FilterUiState(filterType = FilterType.SEPIA)
         ),
         isPhotoFiltersShowing = true,
         cameraController = null,
