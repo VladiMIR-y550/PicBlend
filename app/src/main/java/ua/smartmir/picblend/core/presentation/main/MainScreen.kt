@@ -75,7 +75,11 @@ fun MainScreen(
                 mainViewModel.updateCurrentScreen(Screens.Camera)
                 CameraScreen(
                     modifier = modifier,
-                    viewModel = hiltViewModel<CameraViewModel>()
+                    viewModel = hiltViewModel<CameraViewModel>(),
+                    onImagePicked = {
+                        navigator.saveDataToBackStackEntry(Screens.KEY_RETURNED_IMAGE, it)
+                        navigator.popBackStack()
+                    }
                 )
             },
             galleryContent = {

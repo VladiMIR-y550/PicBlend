@@ -26,7 +26,7 @@ import ua.smartmir.picblend.features.filters.domain.usecase.ApplyFilterUseCase
 import ua.smartmir.picblend.features.filters.domain.usecase.ChooseFilterUseCase
 import ua.smartmir.picblend.features.saveimage.data.model.SavedImageResult.ErrorImageInfo
 import ua.smartmir.picblend.features.saveimage.data.model.SavedImageResult.SuccessImageInfo
-import ua.smartmir.picblend.features.saveimage.domain.usecase.SaveImageToGalleryUseCase
+import ua.smartmir.picblend.features.saveimage.domain.usecase.SaveImageToCashDirUseCase
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,7 +34,7 @@ class CameraViewModel @Inject constructor(
     @Camera applyFilterUseCase: ApplyFilterUseCase,
     @Camera private val filtersUseCase: ChooseFilterUseCase,
     private val launchCameraUseCase: LaunchCameraUseCase,
-    private val saveImageUseCase: SaveImageToGalleryUseCase,
+    private val saveImageUseCase: SaveImageToCashDirUseCase,
     @ApplicationContext private val context: Context
 ) : BaseViewModel<CameraState, CameraEffect>(CameraState()) {
 
