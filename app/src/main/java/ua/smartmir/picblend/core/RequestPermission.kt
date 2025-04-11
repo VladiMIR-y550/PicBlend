@@ -30,12 +30,12 @@ import ua.smartmir.picblend.R
 
 @Composable
 fun CameraPermissionRequest(
-    onDismiss: () -> Unit
+    onDismiss: (Boolean) -> Unit
 ) {
     BaseMultiplePermissions(
         permissionList = cameraPermissionsToRequest,
         permissionTextProvider = PermissionTextProvider.Camera,
-        onDismiss = onDismiss
+        onDismiss = { onDismiss(false) }
     )
 }
 

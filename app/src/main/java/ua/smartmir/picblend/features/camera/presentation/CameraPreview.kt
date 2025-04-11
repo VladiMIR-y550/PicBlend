@@ -1,6 +1,5 @@
 package ua.smartmir.picblend.features.camera.presentation
 
-import android.graphics.Bitmap
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.Image
@@ -13,12 +12,13 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import ua.smartmir.picblend.core.presentation.StableBitmap
 
 @Composable
 fun CameraPreview(
     modifier: Modifier = Modifier,
     controller: LifecycleCameraController?,
-    processedBitmap: Bitmap?
+    processedBitmap: StableBitmap?
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -34,9 +34,9 @@ fun CameraPreview(
             modifier = Modifier.fillMaxSize()
         )
 
-        processedBitmap?.let { bitmap ->
+        processedBitmap?.let { stableBitmap ->
             Image(
-                bitmap = bitmap.asImageBitmap(),
+                bitmap = stableBitmap.bitmap.asImageBitmap(),
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxSize()

@@ -1,6 +1,5 @@
 package ua.smartmir.picblend.features.camera.presentation
 
-import android.graphics.Bitmap
 import android.net.Uri
 import androidx.camera.view.LifecycleCameraController
 import androidx.compose.foundation.Image
@@ -11,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
@@ -39,27 +39,32 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import coil.compose.rememberAsyncImagePainter
 import ua.smartmir.picblend.R
 import ua.smartmir.picblend.core.base.CameraEffect.ShowToast
-import ua.smartmir.picblend.features.filters.presentation.FiltersRow
-import ua.smartmir.picblend.features.filters.domain.model.FilterType
+import ua.smartmir.picblend.core.presentation.StableBitmap
 import ua.smartmir.picblend.core.toast
 import ua.smartmir.picblend.features.camera.presentation.model.CameraSettingsUi
 import ua.smartmir.picblend.features.camera.presentation.model.FilterUiState
+import ua.smartmir.picblend.features.filters.domain.model.FilterType
+import ua.smartmir.picblend.features.filters.presentation.FiltersRow
 
 @Composable
 fun CameraScreen(modifier: Modifier = Modifier, viewModel: CameraViewModel) {
     val context = LocalContext.current
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val controller = viewModel.launchCamera().controller
 
     LaunchedEffect(Unit) {
-        viewModel.effect.collect { effect ->
-            when (effect) {
-                is ShowToast -> {
-                    context.toast(effect.message)
+        lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            viewModel.effect.collect { effect ->
+                when (effect) {
+                    is ShowToast -> context.toast(effect.message)
                 }
             }
         }
@@ -85,7 +90,7 @@ fun CameraScreen(modifier: Modifier = Modifier, viewModel: CameraViewModel) {
 @Composable
 fun CameraUi(
     modifier: Modifier = Modifier,
-    image: Bitmap?,
+    image: StableBitmap?,
     lastImageUri: Uri?,
     availableCameras: List<CameraSettingsUi>,
     filterList: List<FilterUiState>,
@@ -135,18 +140,6 @@ fun CameraUi(
                 }
             }
 
-            lastImageUri?.let { uri ->
-                Image(
-                    painter = rememberAsyncImagePainter(uri),
-                    contentDescription = "Last photo",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(70.dp)
-                        .clip(CircleShape)
-                        .border(1.dp, Color.White, CircleShape)
-                )
-            }
-
             Column(
                 modifier = modifier.wrapContentSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -176,6 +169,19 @@ fun CameraUi(
                     )
                 }
             }
+        }
+        lastImageUri?.let { uri ->
+            Image(
+                painter = rememberAsyncImagePainter(uri),
+                contentDescription = "Last photo",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .offset(16.dp)
+                    .size(70.dp)
+                    .clip(CircleShape)
+                    .border(1.dp, Color.White, CircleShape)
+            )
         }
     }
 }

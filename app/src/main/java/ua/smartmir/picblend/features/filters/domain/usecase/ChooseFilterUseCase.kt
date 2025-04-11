@@ -5,9 +5,9 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.Flow
+import ua.smartmir.picblend.features.filters.data.FiltersRepository
 import ua.smartmir.picblend.features.filters.domain.model.Filter
 import ua.smartmir.picblend.features.filters.domain.model.FilterType
-import ua.smartmir.picblend.features.filters.data.FiltersRepository
 import ua.smartmir.picblend.features.filters.utils.ImageProcessor
 import ua.smartmir.picblend.features.filters.utils.processFilteredBitmap
 

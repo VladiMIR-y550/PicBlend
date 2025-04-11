@@ -1,9 +1,11 @@
 package ua.smartmir.picblend.features.camera.presentation.model
 
 import android.graphics.Bitmap
-import ua.smartmir.picblend.features.filters.domain.model.FilterType
+import androidx.compose.runtime.Stable
 import ua.smartmir.picblend.features.filters.domain.model.Filter
+import ua.smartmir.picblend.features.filters.domain.model.FilterType
 
+@Stable
 data class FilterUiState(
     val filterType: FilterType,
     val name: String = filterType.toString(),
@@ -11,7 +13,7 @@ data class FilterUiState(
     val filteredBitmap: Bitmap? = null
 )
 
-fun Filter.mapToStateEntity(): FilterUiState = FilterUiState(
+fun Filter.mapTo(): FilterUiState = FilterUiState(
     filterType = filterType,
     name = name,
     isSelected = isSelected,

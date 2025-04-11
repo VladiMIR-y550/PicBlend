@@ -2,10 +2,12 @@ package ua.smartmir.picblend.features.camera.presentation.model
 
 import android.content.Context
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Stable
 import ua.smartmir.picblend.R
 import ua.smartmir.picblend.features.camera.domain.model.CameraSettings
 import ua.smartmir.picblend.features.camera.presentation.Focal
 
+@Stable
 data class CameraSettingsUi(
     val cameraId: String,
     @StringRes val lensFacingLabel: Int,

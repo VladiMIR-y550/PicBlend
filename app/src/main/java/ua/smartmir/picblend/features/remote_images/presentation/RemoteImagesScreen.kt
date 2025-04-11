@@ -26,10 +26,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import coil.compose.AsyncImage
 import ua.smartmir.picblend.core.base.RemoteImagesEffect
 import ua.smartmir.picblend.core.toast
+import ua.smartmir.picblend.features.remote_images.presentation.RemoteImagesViewModel.Companion.LOAD_MORE_THRESHOLD_INDEX
 import ua.smartmir.picblend.features.remote_images.presentation.model.PhotoUi
 
 @Composable
@@ -39,15 +43,18 @@ fun RemoteImagesScreen(
     onImagePicked: (Uri?) -> Unit
 ) {
     val context = LocalContext.current
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var isLoading by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        viewModel.effect.collect { effect ->
-            when (effect) {
-                is RemoteImagesEffect.Loading -> isLoading = effect.isLoading
-                is RemoteImagesEffect.ShowToast -> context.toast(effect.message)
-                is RemoteImagesEffect.CachedImage -> onImagePicked(effect.uri)
+        lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            viewModel.effect.collect { effect ->
+                when (effect) {
+                    is RemoteImagesEffect.Loading -> isLoading = effect.isLoading
+                    is RemoteImagesEffect.ShowToast -> context.toast(effect.message)
+                    is RemoteImagesEffect.CachedImage -> onImagePicked(effect.uri)
+                }
             }
         }
     }
@@ -66,7 +73,7 @@ fun RemoteImagesUI(
     modifier: Modifier = Modifier,
     isLoading: Boolean,
     images: List<PhotoUi>,
-    onScrollToEnd:() -> Unit,
+    onScrollToEnd: () -> Unit,
     onImageSelected: (PhotoUi) -> Unit
 ) {
     val listState = rememberLazyListState()
@@ -75,7 +82,7 @@ fun RemoteImagesUI(
         snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
             .collect { index ->
                 index?.let {
-                    if (index >= images.size.div(3)) onScrollToEnd.invoke()
+                    if (index >= images.size.div(LOAD_MORE_THRESHOLD_INDEX)) onScrollToEnd.invoke()
                 }
             }
     }

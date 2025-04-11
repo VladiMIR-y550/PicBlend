@@ -6,7 +6,7 @@
     <string name="system_dialog_title_go_to_settings">Go to settings</string>
     <string name="system_dialog_text_camera_access_required">In order to take a photo, we need access to your camera. Please grant access to continue.</string>
     <string name="system_dialog_text_go_to_camera_app_settings">Camera permission is denied. Please go to the app settings and grant permission.</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="switch_camera">Switch camera</string>
     <string name="take_photo">Take photo</string>
     <string name="photo_filters">Photo filters</string>
@@ -30,5 +30,6 @@
     <string name="camera_type_telephoto">Telephoto</string>
     <string name="focal_mm">%s mm</string>
     <string name="dots" translatable="false">...</string>
-    <string name="camera_description" translatable="false">\"ID: %s | %s | %s (focal: %s mm)\"</string>
+    <string name="camera_description">\"ID: %s | %s | %s (focal: %s mm)\"</string>
+    <string name="saved">Saved %s</string>
 </resources>
