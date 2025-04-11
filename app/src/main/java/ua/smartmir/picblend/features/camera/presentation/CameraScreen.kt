@@ -1,26 +1,32 @@
 package ua.smartmir.picblend.features.camera.presentation
 
-import androidx.camera.core.CameraSelector
+import android.graphics.Bitmap
+import android.net.Uri
+import androidx.camera.view.LifecycleCameraController
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cameraswitch
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.icons.filled.PhotoFilter
-import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,20 +37,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import ua.smartmir.picblend.R
 import ua.smartmir.picblend.base.CameraEffect.ShowToast
 import ua.smartmir.picblend.common.FiltersRow
+import ua.smartmir.picblend.common.filters.domain.model.FilterType
 import ua.smartmir.picblend.core.toast
+import ua.smartmir.picblend.features.camera.presentation.model.CameraSettingsUi
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CameraScreen(modifier: Modifier = Modifier, viewModel: CameraViewModel) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val scaffoldState = rememberBottomSheetScaffoldState()
     val controller = viewModel.launchCamera().controller
 
     LaunchedEffect(Unit) {
@@ -57,87 +64,235 @@ fun CameraScreen(modifier: Modifier = Modifier, viewModel: CameraViewModel) {
         }
     }
 
-    BottomSheetScaffold(
-        scaffoldState = scaffoldState,
-        sheetPeekHeight = 0.dp,
-        sheetContent = {
+    CameraUi(
+        modifier = modifier,
+        image = uiState.image,
+        lastImageUri = uiState.lastImageUri,
+        availableCameras = uiState.cameras,
+        filterList = uiState.filterList,
+        isPhotoFiltersShowing = uiState.isPhotoFiltersShowing,
+        cameraController = controller,
+        switchFrontBackCamera = viewModel::switchFrontBackCamera,
+        showPhotoFilters = viewModel::showPhotoFilters,
+        takePhoto = viewModel::takePhoto,
+        changeCamera = viewModel::changeCamera,
+        changeFilter = viewModel::changeFilter
+    )
+}
 
-        }
-    ) { padding ->
-        Box(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(padding)
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CameraUi(
+    modifier: Modifier = Modifier,
+    image: Bitmap?,
+    lastImageUri: Uri?,
+    availableCameras: List<CameraSettingsUi>,
+    filterList: List<FilterStateEntity>,
+    isPhotoFiltersShowing: Boolean,
+    cameraController: LifecycleCameraController?,
+    switchFrontBackCamera: () -> Unit,
+    showPhotoFilters: () -> Unit,
+    takePhoto: () -> Unit,
+    changeCamera: (CameraSettingsUi) -> Unit,
+    changeFilter: (FilterType) -> Unit,
+) {
+    Box(
+        modifier = modifier.fillMaxSize()
+    ) {
+        CameraPreview(
+            modifier = modifier.fillMaxSize(),
+            controller = cameraController,
+            processedBitmap = image
+        )
+        Column(
+            modifier = modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            CameraPreview(
-                modifier = modifier.fillMaxSize(),
-                controller = controller,
-                processedBitmap = uiState.image
-            )
-            IconButton(
-                onClick = {
-                    controller.cameraSelector =
-                        if (controller.cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA)
-                            CameraSelector.DEFAULT_FRONT_CAMERA
-                        else CameraSelector.DEFAULT_BACK_CAMERA
-                },
-                modifier = modifier.offset(16.dp, 16.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Cameraswitch,
-                    contentDescription = stringResource(R.string.switch_camera)
-                )
-            }
-
-            IconButton(
-                onClick = viewModel::showPhotoFilters,
-                modifier = modifier.align(Alignment.TopEnd)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.PhotoFilter,
-                    contentDescription = stringResource(R.string.photo_filters)
-                )
-            }
-
             Row(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .align(Alignment.BottomCenter)
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceAround
+                modifier = modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 IconButton(
-                    onClick = viewModel::takePhoto
+                    onClick = switchFrontBackCamera,
+                    modifier = modifier
                 ) {
                     Icon(
-                        imageVector = Icons.Default.PhotoCamera,
-                        contentDescription = stringResource(R.string.take_photo)
+                        imageVector = Icons.Default.Cameraswitch,
+                        contentDescription = stringResource(R.string.switch_camera)
+                    )
+                }
+
+                IconButton(
+                    onClick = showPhotoFilters,
+                    modifier = modifier
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.PhotoFilter,
+                        contentDescription = stringResource(R.string.photo_filters)
                     )
                 }
             }
-            uiState.lastImageUri?.let { uri ->
+
+            lastImageUri?.let { uri ->
                 Image(
                     painter = rememberAsyncImagePainter(uri),
                     contentDescription = "Last photo",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .offset(16.dp, (-16.dp))
                         .size(70.dp)
                         .clip(CircleShape)
                         .border(1.dp, Color.White, CircleShape)
-                        .align(Alignment.BottomStart)
                 )
             }
 
-            if (uiState.isPhotoFiltersShowing) {
-                FiltersRow(
-                    modifier = modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = 40.dp),
-                    filters = uiState.filterList,
-                    onFilterSelected = viewModel::changeFilter
+            Column(
+                modifier = modifier.wrapContentSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                if (isPhotoFiltersShowing) {
+                    FiltersRow(
+                        modifier = modifier,
+                        filters = filterList,
+                        onFilterSelected = changeFilter
+                    )
+                }
+
+                CameraSelector(
+                    modifier = modifier,
+                    cameras = availableCameras,
+                    onCameraSelected = changeCamera
+                )
+
+                IconButton(
+                    modifier = modifier.size(64.dp),
+                    onClick = takePhoto
+                ) {
+                    Icon(
+                        modifier = modifier.size(40.dp),
+                        imageVector = Icons.Default.PhotoCamera,
+                        contentDescription = stringResource(R.string.take_photo)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun CameraSelector(
+    modifier: Modifier = Modifier,
+    cameras: List<CameraSettingsUi>,
+    onCameraSelected: (CameraSettingsUi) -> Unit
+) {
+    Surface(
+        modifier = modifier
+            .wrapContentSize()
+            .padding(8.dp),
+        shape = RoundedCornerShape(16.dp),
+        color = Color.Gray
+    ) {
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = modifier.wrapContentSize()
+        ) {
+            items(cameras.size) { index ->
+                val currentCamera = cameras[index]
+                CameraToggle(
+                    camera = currentCamera,
+                    isSelected = currentCamera.isSelected,
+                    onClick = { onCameraSelected(currentCamera) }
                 )
             }
         }
     }
+
+}
+
+@Composable
+fun CameraToggle(
+    modifier: Modifier = Modifier,
+    camera: CameraSettingsUi,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    val backgroundColor =
+        if (isSelected) Color.Green else Color.Black
+
+    IconButton(
+        modifier = modifier,
+        onClick = onClick
+    ) {
+        Box(modifier = modifier.fillMaxSize()) {
+            Icon(
+                modifier = Modifier.align(Alignment.TopCenter),
+                imageVector = camera.focal.imageVector,
+                contentDescription = camera.description,
+                tint = backgroundColor
+            )
+            Text(
+                modifier = Modifier.align(Alignment.BottomCenter),
+                text = camera.focal.focalValue?.toString()
+                    ?: stringResource(R.string.dots),
+                color = backgroundColor,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+    }
+}
+
+@Composable
+@Preview(showBackground = true, showSystemUi = true)
+fun CameraUiPreview() {
+    CameraUi(
+        image = null,
+        lastImageUri = null,
+        availableCameras = listOf(
+            CameraSettingsUi(
+                isSelected = true,
+                cameraId = "1",
+                lensFacingLabel = R.string.camera,
+                lensFacingId = 1,
+                focal = Focal.Standard(2.2f)
+
+            )
+        ),
+        filterList = listOf(
+            FilterStateEntity(isSelected = true, filterType = FilterType.None),
+            FilterStateEntity(filterType = FilterType.INVERT),
+            FilterStateEntity(filterType = FilterType.GRAYSCALE),
+            FilterStateEntity(filterType = FilterType.SEPIA)
+        ),
+        isPhotoFiltersShowing = true,
+        cameraController = null,
+        switchFrontBackCamera = {},
+        showPhotoFilters = {},
+        takePhoto = {},
+        changeCamera = {},
+        changeFilter = {}
+    )
+}
+
+@Composable
+@Preview(showBackground = true)
+fun CameraSelectorPreview() {
+    CameraSelector(
+        cameras = listOf(
+            CameraSettingsUi(
+                isSelected = true,
+                cameraId = "1",
+                lensFacingLabel = R.string.camera,
+                lensFacingId = 1,
+                focal = Focal.Standard(2.2f)
+            ),
+            CameraSettingsUi(
+                isSelected = false,
+                cameraId = "1",
+                lensFacingLabel = R.string.camera,
+                lensFacingId = 1,
+                focal = Focal.UltraWide(1.2f)
+            )
+        ),
+        onCameraSelected = {}
+    )
 }

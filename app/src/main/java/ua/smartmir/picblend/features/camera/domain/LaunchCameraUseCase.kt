@@ -6,6 +6,7 @@ import ua.smartmir.picblend.common.filters.domain.usecase.ApplyFilterUseCase
 import ua.smartmir.picblend.di.ApplyFilter
 import ua.smartmir.picblend.features.camera.data.CameraController
 import ua.smartmir.picblend.features.camera.data.CameraRepository
+import ua.smartmir.picblend.features.camera.domain.model.CameraSettings
 import javax.inject.Inject
 
 class LaunchCameraUseCase @Inject constructor(
@@ -23,4 +24,13 @@ class LaunchCameraUseCase @Inject constructor(
     fun startCamera(): CameraController {
         return cameraRepository.lunch()
     }
+
+    fun availableCameras(): Flow<List<CameraSettings>> {
+        return cameraRepository.camerasFlow
+    }
+
+    fun updateChosenCamera(cameraId: String) =
+        cameraRepository.updateSelectedCamera(cameraId)
+
+    fun switchFrontBackCamera() = cameraRepository.switchFrontBackCamera()
 }

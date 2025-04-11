@@ -25,11 +25,4 @@ class ImageModule {
     fun provideExecutor(@ApplicationContext context: Context): Executor {
         return ContextCompat.getMainExecutor(context)
     }
-
-    @Provides
-    fun provideCameraController(@ApplicationContext context: Context): LifecycleCameraController {
-        return LifecycleCameraController(context).apply {
-            setEnabledUseCases(CameraController.IMAGE_CAPTURE or CameraController.IMAGE_ANALYSIS)
-        }
-    }
 }

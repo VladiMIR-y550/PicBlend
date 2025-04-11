@@ -17,7 +17,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 @Composable
 fun CameraPreview(
     modifier: Modifier = Modifier,
-    controller: LifecycleCameraController,
+    controller: LifecycleCameraController?,
     processedBitmap: Bitmap?
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -27,7 +27,7 @@ fun CameraPreview(
             factory = { context ->
                 PreviewView(context).apply {
                     this.controller = controller
-                    controller.bindToLifecycle(lifecycleOwner)
+                    controller?.bindToLifecycle(lifecycleOwner)
                     scaleType = PreviewView.ScaleType.FILL_CENTER
                 }
             },
