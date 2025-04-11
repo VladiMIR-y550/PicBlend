@@ -2,7 +2,7 @@ package ua.smartmir.picblend.features.camera.domain
 
 import android.graphics.Bitmap
 import kotlinx.coroutines.flow.Flow
-import ua.smartmir.picblend.common.filters.domain.usecase.ApplyFilterUseCase
+import ua.smartmir.picblend.features.filters.domain.usecase.ApplyFilterUseCase
 import ua.smartmir.picblend.di.ApplyFilter
 import ua.smartmir.picblend.features.camera.data.CameraController
 import ua.smartmir.picblend.features.camera.data.CameraRepository

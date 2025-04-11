@@ -14,20 +14,21 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import ua.smartmir.picblend.base.BaseViewModel
-import ua.smartmir.picblend.base.CameraEffect
-import ua.smartmir.picblend.base.CameraEffect.ShowToast
-import ua.smartmir.picblend.common.filters.domain.model.FilterType
-import ua.smartmir.picblend.common.filters.domain.usecase.ApplyFilterUseCase
-import ua.smartmir.picblend.common.filters.domain.usecase.ChooseFilterUseCase
-import ua.smartmir.picblend.common.saveimage.data.model.SavedImageResult.ErrorImageInfo
-import ua.smartmir.picblend.common.saveimage.data.model.SavedImageResult.SuccessImageInfo
-import ua.smartmir.picblend.common.saveimage.domain.usecase.SaveImageToGalleryUseCase
+import ua.smartmir.picblend.core.base.BaseViewModel
+import ua.smartmir.picblend.core.base.CameraEffect
+import ua.smartmir.picblend.core.base.CameraEffect.ShowToast
+import ua.smartmir.picblend.features.filters.domain.model.FilterType
+import ua.smartmir.picblend.features.filters.domain.usecase.ApplyFilterUseCase
+import ua.smartmir.picblend.features.filters.domain.usecase.ChooseFilterUseCase
+import ua.smartmir.picblend.features.saveimage.data.model.SavedImageResult.ErrorImageInfo
+import ua.smartmir.picblend.features.saveimage.data.model.SavedImageResult.SuccessImageInfo
+import ua.smartmir.picblend.features.saveimage.domain.usecase.SaveImageToGalleryUseCase
 import ua.smartmir.picblend.di.Camera
 import ua.smartmir.picblend.features.camera.data.CameraController
 import ua.smartmir.picblend.features.camera.domain.LaunchCameraUseCase
 import ua.smartmir.picblend.features.camera.presentation.model.CameraSettingsUi
 import ua.smartmir.picblend.features.camera.presentation.model.mapTo
+import ua.smartmir.picblend.features.camera.presentation.model.mapToStateEntity
 import javax.inject.Inject
 
 @HiltViewModel

@@ -35,17 +35,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ua.smartmir.picblend.R
-import ua.smartmir.picblend.base.HomeEffect.ShareImage
-import ua.smartmir.picblend.base.HomeEffect.ShowToast
-import ua.smartmir.picblend.common.BarIconState
-import ua.smartmir.picblend.common.CameraPermissionRequest
-import ua.smartmir.picblend.common.FiltersRow
-import ua.smartmir.picblend.common.filters.domain.model.FilterType
+import ua.smartmir.picblend.core.base.HomeEffect.ShareImage
+import ua.smartmir.picblend.core.base.HomeEffect.ShowToast
+import ua.smartmir.picblend.core.presentation.main.BarIconState
+import ua.smartmir.picblend.core.CameraPermissionRequest
+import ua.smartmir.picblend.features.filters.presentation.FiltersRow
+import ua.smartmir.picblend.features.filters.domain.model.FilterType
 import ua.smartmir.picblend.core.hasRequiredCameraPermission
 import ua.smartmir.picblend.core.toast
-import ua.smartmir.picblend.features.camera.presentation.FilterStateEntity
-import ua.smartmir.picblend.navigation.Navigator
-import ua.smartmir.picblend.navigation.Screens.Companion.KEY_RETURNED_IMAGE
+import ua.smartmir.picblend.features.camera.presentation.model.FilterUiState
+import ua.smartmir.picblend.core.presentation.navigation.Navigator
+import ua.smartmir.picblend.core.presentation.navigation.Screens.Companion.KEY_RETURNED_IMAGE
 
 @Composable
 fun HomeScreen(
@@ -132,7 +132,7 @@ fun HomeScreen(
 fun HomeUi(
     modifier: Modifier = Modifier,
     imageBitmap: ImageBitmap?,
-    filters: List<FilterStateEntity>,
+    filters: List<FilterUiState>,
     isPhotoFiltersShowing: Boolean,
     onImageFiltersClick: () -> Unit,
     onFilterSelected: (FilterType) -> Unit,
