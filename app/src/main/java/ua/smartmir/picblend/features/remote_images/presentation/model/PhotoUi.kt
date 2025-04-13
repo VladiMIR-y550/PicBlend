@@ -9,6 +9,7 @@ data class PhotoUi(
     val createdAt: String,
     val width: Int,
     val height: Int,
+    val ratio: Float,
     val color: String?,
     val likes: Int,
     val description: String?,
@@ -17,16 +18,20 @@ data class PhotoUi(
     val user: UserUi
 )
 
-fun UnsplashPhoto.mapTo(): PhotoUi = PhotoUi(
-    id = id,
-    createdAt = createdAt,
-    width = width,
-    height = height,
-    color = color,
-    likes = likes,
-    description = description,
-    urls = urls.mapTo(),
-    links = links.mapTo(),
-    user = user.mapTo()
-)
+fun UnsplashPhoto.mapTo(): PhotoUi {
+    val safeRatio = if (height != 0) width.toFloat() / height else 1f
+    return PhotoUi(
+        id = id,
+        createdAt = createdAt,
+        width = width,
+        height = height,
+        ratio = safeRatio,
+        color = color,
+        likes = likes,
+        description = description,
+        urls = urls.mapTo(),
+        links = links.mapTo(),
+        user = user.mapTo()
+    )
+}
 

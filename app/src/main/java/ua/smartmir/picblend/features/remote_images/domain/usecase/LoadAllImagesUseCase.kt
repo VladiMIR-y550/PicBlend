@@ -7,8 +7,18 @@ import javax.inject.Inject
 class LoadAllImagesUseCase @Inject constructor(
     private val remoteImagesRepository: RemoteImagesRepository
 ) {
-    suspend fun loadImages(page: Int): Result<List<UnsplashPhoto>> {
-        return remoteImagesRepository.images(page)
+    private var currentPage = 1
+
+    suspend fun loadImages(): Result<List<UnsplashPhoto>> {
+        return remoteImagesRepository.images(currentPage).fold(
+            onSuccess = { photos ->
+                currentPage++
+                Result.success(photos)
+            },
+            onFailure = {
+                Result.failure(it)
+            }
+        )
     }
 
     suspend fun trackDownload(url: String) = remoteImagesRepository.trackDownload(url)
