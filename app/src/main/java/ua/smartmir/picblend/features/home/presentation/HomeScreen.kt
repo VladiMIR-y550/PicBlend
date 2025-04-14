@@ -3,19 +3,24 @@ package ua.smartmir.picblend.features.home.presentation
 import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.rememberTransformableState
+import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,21 +40,27 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.launch
 import ua.smartmir.picblend.R
 import ua.smartmir.picblend.core.CameraPermissionRequest
 import ua.smartmir.picblend.core.base.CollectEffects
@@ -287,15 +298,112 @@ fun MainImageFrame(
     imageBitmap: ImageBitmap?,
     onImageFiltersClick: () -> Unit,
 ) {
-    imageBitmap?.let {
-        val aspectRatio = it.width.toFloat() / it.height.toFloat()
+    if (imageBitmap != null) {
+        TransformableImageContainer(
+            modifier = modifier,
+            imageBitmap = imageBitmap,
+            onImageFiltersClick = onImageFiltersClick
+        )
+    } else {
+        Column(
+            modifier = modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                painter = painterResource(R.drawable.pic_blend),
+                contentDescription = stringResource(R.string.default_image),
+                contentScale = ContentScale.Fit
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                modifier = modifier.padding(horizontal = 16.dp),
+                text = stringResource(R.string.add_photo_and_throw_on_some_filters),
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}
+
+@Composable
+fun TransformableImageContainer(
+    modifier: Modifier = Modifier,
+    imageBitmap: ImageBitmap,
+    onImageFiltersClick: () -> Unit,
+) {
+    val aspectRatio = imageBitmap.width.toFloat() / imageBitmap.height.toFloat()
+
+    val minScale = 1f
+    val maxScale = 5f
+
+    val scale = remember { Animatable(1f) }
+    val offsetX = remember { Animatable(0f) }
+    val offsetY = remember { Animatable(0f) }
+
+    val coroutineScope = rememberCoroutineScope()
+
+    val transformableState = rememberTransformableState { zoomChange, panChange, _ ->
+        val newScale = (scale.value * zoomChange).coerceIn(minScale, maxScale)
+        coroutineScope.launch {
+            scale.snapTo(newScale)
+
+            if (scale.value > 1f) {
+                val multiplier = 3f
+                offsetX.snapTo(offsetX.value + panChange.x * multiplier)
+                offsetY.snapTo(offsetY.value + panChange.y * multiplier)
+            }
+        }
+    }
+
+    val doubleTapModifier = Modifier.pointerInput(Unit) {
+        detectTapGestures(
+            onDoubleTap = {
+                coroutineScope.launch {
+                    scale.animateTo(1f)
+                    offsetX.animateTo(0f)
+                    offsetY.animateTo(0f)
+                }
+            }
+        )
+    }
+
+    BoxWithConstraints(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        val containerWidth = maxWidth
+        val containerHeight = maxHeight
+
+        val calculatedWidth: Dp
+        val calculatedHeight: Dp
+
+        if (containerWidth / aspectRatio <= containerHeight) {
+            calculatedWidth = containerWidth
+            calculatedHeight = containerWidth / aspectRatio
+        } else {
+            calculatedHeight = containerHeight
+            calculatedWidth = containerHeight * aspectRatio
+        }
 
         Box(
-            modifier = modifier
-                .fillMaxWidth()
-                .aspectRatio(aspectRatio)
-                .padding(16.dp)
-                .border(width = 1.dp, color = Color.DarkGray, shape = RoundedCornerShape(8.dp))
+            modifier = Modifier
+                .size(calculatedWidth, calculatedHeight)
+                .graphicsLayer {
+                    scaleX = scale.value
+                    scaleY = scale.value
+                    translationX = offsetX.value
+                    translationY = offsetY.value
+                }
+                .then(doubleTapModifier)
+                .transformable(state = transformableState)
+                .border(1.dp, Color.DarkGray, RoundedCornerShape(8.dp))
                 .clip(RoundedCornerShape(8.dp))
         ) {
             Image(
@@ -322,27 +430,6 @@ fun MainImageFrame(
                 )
             }
         }
-    } ?: Column(
-        modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Image(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            painter = painterResource(R.drawable.pic_blend),
-            contentDescription = stringResource(R.string.default_image),
-            contentScale = ContentScale.Fit
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            modifier = modifier.padding(horizontal = 16.dp),
-            text = stringResource(R.string.add_photo_and_throw_on_some_filters),
-            style = MaterialTheme.typography.bodyMedium,
-            textAlign = TextAlign.Center
-        )
     }
 }
 
