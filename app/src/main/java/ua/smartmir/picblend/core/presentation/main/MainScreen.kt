@@ -24,9 +24,9 @@ import ua.smartmir.picblend.features.remote_images.presentation.RemoteImagesView
 @Composable
 fun MainScreen(
     mainViewModel: MainViewModel,
-    onExitApp: () -> Unit,
     modifier: Modifier = Modifier,
     navigator: Navigator = rememberNavigator(),
+    onExitApp: () -> Unit,
 ) {
     val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
 
