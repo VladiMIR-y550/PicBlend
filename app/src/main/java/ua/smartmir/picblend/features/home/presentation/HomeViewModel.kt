@@ -105,7 +105,12 @@ class HomeViewModel @Inject constructor(
             uiState.value.image?.let {
                 saveImageGalleryUseCase.saveImage(it.bitmap) { result ->
                     when (result) {
-                        is SuccessImageInfo -> sendEffect(ShowToast(context.getString(R.string.saved, result.name)))
+                        is SuccessImageInfo -> sendEffect(
+                            ShowToast(
+                                context.getString(R.string.saved, result.name)
+                            )
+                        )
+
                         is ErrorImageInfo -> sendEffect(ShowToast(result.errorMessage))
                     }
                 }

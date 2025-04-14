@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -15,7 +16,7 @@ abstract class BaseViewModel<S : ScreenState, T : UiEffect>(state: S) : ViewMode
     val uiState: StateFlow<S> = _uiState.asStateFlow()
 
     private val _effect = MutableSharedFlow<T>()
-    val effect: SharedFlow<T> = _effect
+    val effect: SharedFlow<T> = _effect.asSharedFlow()
 
     protected fun sendEffect(effect: T) {
         viewModelScope.launch {

@@ -32,4 +32,5 @@
     <string name="focal_mm">%s мм</string>
     <string name="camera_description">ID: %s | %s | %s (focal: %s мм)</string>
     <string name="saved">Сохранено %s</string>
+    <string name="no_internet">Нет подключения к интернету</string>
 </resources>

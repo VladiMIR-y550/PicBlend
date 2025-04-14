@@ -4,9 +4,9 @@ import android.content.ContentResolver
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.InputStream
 import javax.inject.Inject
 
 interface GalleryRepository {
@@ -16,15 +16,17 @@ interface GalleryRepository {
         private val contentResolver: ContentResolver
     ) : GalleryRepository {
         override suspend fun loadBitmapFromUri(uri: Uri): Bitmap? {
+            var stream: InputStream? = null
             return withContext(Dispatchers.IO) {
-                val inputStream = contentResolver.openInputStream(uri)
                 try {
-                    BitmapFactory.decodeStream(inputStream)
+                    contentResolver.openInputStream(uri)?.use { input ->
+                        stream = input
+                        BitmapFactory.decodeStream(input)
+                    }
                 } catch (e: Exception) {
-                    Log.e("TAG_GalleryRepository", "loadBitmapFromUri: ${e.message}")
                     null
                 } finally {
-                    inputStream?.close()
+                    stream?.close()
                 }
             }
         }
