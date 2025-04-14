@@ -33,4 +33,8 @@
     <string name="camera_description">ID: %s | %s | %s (focal: %s мм)</string>
     <string name="saved">Сохранено %s</string>
     <string name="no_internet">Нет подключения к интернету</string>
+    <string name="dialog_title_exit">Выход</string>
+    <string name="dialog_text_maybe_not_time_yet">Может ещё не время?</string>
+    <string name="dialog_button_exit">ВЫЙТИ</string>
+    <string name="add_photo_and_throw_on_some_filters">Добавь фото с камеры, галереи или сети и накрути фильтров ✨</string>
 </resources>

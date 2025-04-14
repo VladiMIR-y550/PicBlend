@@ -117,4 +117,13 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+
+    fun showExitAppDialog(showDialog: Boolean = true) {
+        _uiState.update { state ->
+            state.copy(
+                isExitDialogShowed = showDialog
+            )
+
+        }
+    }
 }

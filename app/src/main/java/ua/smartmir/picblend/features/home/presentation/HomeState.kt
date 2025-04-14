@@ -13,4 +13,5 @@ data class HomeState(
     val filterList: List<FilterUiState> = emptyList(),
     val isPermissionNeeded: Boolean = false,
     val isPhotoFiltersShowing: Boolean = false,
+    val isExitDialogShowed: Boolean = false,
 ) : ScreenState

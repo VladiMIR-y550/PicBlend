@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
             PicBlendTheme {
                 MainScreen(
                     mainViewModel = hiltViewModel<MainViewModel>(),
-                    onExitApp = { finish() },
+                    onExitApp = ::finish
                 )
             }
         }

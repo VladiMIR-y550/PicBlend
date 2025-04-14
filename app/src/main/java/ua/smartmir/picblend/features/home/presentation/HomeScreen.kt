@@ -2,28 +2,42 @@ package ua.smartmir.picblend.features.home.presentation
 
 import android.content.Intent
 import android.net.Uri
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoFixHigh
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
@@ -31,6 +45,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -71,6 +86,8 @@ fun HomeScreen(
             imageUri ?: return@getDataFromBackStackEntryFlow
         )
     }
+
+    BackHandler(onBack = viewModel::showExitAppDialog)
 
     CollectEffects(viewModel.effect, lifecycleOwner) { effect ->
         when (effect) {
@@ -113,6 +130,18 @@ fun HomeScreen(
         )
     }
 
+    if (uiState.isExitDialogShowed) {
+        ExitAppDialog(
+            onExitAction = {
+                viewModel.showExitAppDialog(false)
+                onExitClick()
+            },
+            onDismiss = {
+                viewModel.showExitAppDialog(false)
+            }
+        )
+    }
+
     HomeUi(
         modifier = modifier,
         imageBitmap = uiState.image?.bitmap?.asImageBitmap(),
@@ -132,6 +161,49 @@ fun HomeScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ExitAppDialog(
+    modifier: Modifier = Modifier,
+    onExitAction: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    BasicAlertDialog(
+        onDismissRequest = onDismiss,
+        modifier = modifier,
+        content = {
+            Surface(
+                modifier = Modifier.wrapContentSize(),
+                shape = MaterialTheme.shapes.large,
+                tonalElevation = AlertDialogDefaults.TonalElevation
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        modifier = modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.titleLarge,
+                        text = stringResource(id = R.string.dialog_title_exit),
+                    )
+                    Text(
+                        modifier = modifier.padding(vertical = 16.dp),
+                        style = MaterialTheme.typography.titleMedium,
+                        text = stringResource(R.string.dialog_text_maybe_not_time_yet)
+                    )
+                    TextButton(
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(16.dp)),
+                        onClick = onExitAction,
+                        content = {
+                            Text(text = stringResource(R.string.dialog_button_exit))
+                        }
+                    )
+                }
+            }
+        }
+    )
+}
+
 @Composable
 fun HomeUi(
     modifier: Modifier = Modifier,
@@ -144,7 +216,10 @@ fun HomeUi(
     onGalleryClick: () -> Unit,
     onNetworkClick: () -> Unit
 ) {
-    Box(modifier = modifier.fillMaxSize()) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -213,36 +288,63 @@ fun MainImageFrame(
     onImageFiltersClick: () -> Unit,
 ) {
     imageBitmap?.let {
+        val aspectRatio = it.width.toFloat() / it.height.toFloat()
+
         Box(
             modifier = modifier
-                .wrapContentSize()
+                .fillMaxWidth()
+                .aspectRatio(aspectRatio)
                 .padding(16.dp)
                 .border(width = 1.dp, color = Color.DarkGray, shape = RoundedCornerShape(8.dp))
+                .clip(RoundedCornerShape(8.dp))
         ) {
             Image(
-                modifier = modifier,
                 bitmap = imageBitmap,
                 contentDescription = stringResource(R.string.uploaded_image),
-                contentScale = ContentScale.Fit
+                contentScale = ContentScale.FillBounds,
+                modifier = Modifier.fillMaxSize()
             )
+
             IconButton(
                 onClick = onImageFiltersClick,
-                modifier = Modifier.align(Alignment.TopEnd)
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(8.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f),
+                        shape = CircleShape
+                    )
             ) {
                 Icon(
                     imageVector = Icons.Default.AutoFixHigh,
-                    contentDescription = stringResource(R.string.photo_filters)
+                    contentDescription = stringResource(R.string.photo_filters),
+                    tint = MaterialTheme.colorScheme.onSurface
                 )
             }
         }
-    } ?: Image(
-        modifier = modifier
-            .fillMaxWidth(),
-        painter = painterResource(R.drawable.shape),
-        contentDescription = stringResource(R.string.default_image)
-    )
-}
+    } ?: Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            painter = painterResource(R.drawable.pic_blend),
+            contentDescription = stringResource(R.string.default_image),
+            contentScale = ContentScale.Fit
+        )
 
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            modifier = modifier.padding(horizontal = 16.dp),
+            text = stringResource(R.string.add_photo_and_throw_on_some_filters),
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Center
+        )
+    }
+}
 
 @Preview(showSystemUi = true)
 @Composable
