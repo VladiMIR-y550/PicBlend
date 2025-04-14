@@ -26,11 +26,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.repeatOnLifecycle
 import coil.compose.AsyncImage
+import ua.smartmir.picblend.core.base.CollectEffects
 import ua.smartmir.picblend.core.base.RemoteImagesEffect
 import ua.smartmir.picblend.core.toast
 import ua.smartmir.picblend.features.remote_images.presentation.RemoteImagesViewModel.Companion.LOAD_MORE_THRESHOLD_INDEX
@@ -43,19 +42,15 @@ fun RemoteImagesScreen(
     onImagePicked: (Uri?) -> Unit
 ) {
     val context = LocalContext.current
-    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var isLoading by remember { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
-        lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-            viewModel.effect.collect { effect ->
-                when (effect) {
-                    is RemoteImagesEffect.Loading -> isLoading = effect.isLoading
-                    is RemoteImagesEffect.ShowToast -> context.toast(effect.message)
-                    is RemoteImagesEffect.CachedImage -> onImagePicked(effect.uri)
-                }
-            }
+    CollectEffects(viewModel.effect, lifecycleOwner) { effect ->
+        when (effect) {
+            is RemoteImagesEffect.Loading -> isLoading = effect.isLoading
+            is RemoteImagesEffect.ShowToast -> context.toast(effect.message)
+            is RemoteImagesEffect.CachedImage -> onImagePicked(effect.uri)
         }
     }
 

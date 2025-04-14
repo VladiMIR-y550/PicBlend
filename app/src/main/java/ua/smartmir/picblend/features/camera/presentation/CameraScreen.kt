@@ -19,9 +19,9 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoFixHigh
 import androidx.compose.material.icons.filled.Cameraswitch
 import androidx.compose.material.icons.filled.PhotoCamera
-import androidx.compose.material.icons.filled.PhotoFilter
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,7 +29,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,15 +39,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.repeatOnLifecycle
 import coil.compose.rememberAsyncImagePainter
 import ua.smartmir.picblend.R
-import ua.smartmir.picblend.core.base.CameraEffect
-import ua.smartmir.picblend.core.base.CameraEffect.ShareImage
 import ua.smartmir.picblend.core.base.CameraEffect.ShowToast
+import ua.smartmir.picblend.core.base.CollectEffects
 import ua.smartmir.picblend.core.presentation.StableBitmap
 import ua.smartmir.picblend.core.toast
 import ua.smartmir.picblend.features.camera.presentation.model.CameraSettingsUi
@@ -63,17 +59,13 @@ fun CameraScreen(
     onImagePicked: (Uri?) -> Unit
 ) {
     val context = LocalContext.current
-    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val controller = viewModel.launchCamera().controller
 
-    LaunchedEffect(Unit) {
-        lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-            viewModel.effect.collect { effect ->
-                when (effect) {
-                    is ShowToast -> context.toast(effect.message)
-                }
-            }
+    CollectEffects(viewModel.effect, lifecycleOwner) { effect ->
+        when (effect) {
+            is ShowToast -> context.toast(effect.message)
         }
     }
 
@@ -145,7 +137,7 @@ fun CameraUi(
                     modifier = modifier
                 ) {
                     Icon(
-                        imageVector = Icons.Default.PhotoFilter,
+                        imageVector = Icons.Default.AutoFixHigh,
                         contentDescription = stringResource(R.string.photo_filters)
                     )
                 }

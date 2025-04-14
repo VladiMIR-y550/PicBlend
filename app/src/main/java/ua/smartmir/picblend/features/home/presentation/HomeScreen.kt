@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,14 +14,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PhotoFilter
+import androidx.compose.material.icons.filled.AutoFixHigh
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,12 +33,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.repeatOnLifecycle
 import ua.smartmir.picblend.R
 import ua.smartmir.picblend.core.CameraPermissionRequest
+import ua.smartmir.picblend.core.base.CollectEffects
 import ua.smartmir.picblend.core.base.HomeEffect.ShareImage
 import ua.smartmir.picblend.core.base.HomeEffect.ShowToast
 import ua.smartmir.picblend.core.hasRequiredCameraPermission
@@ -62,7 +61,7 @@ fun HomeScreen(
     updateBarIconsState: (List<BarIconState>) -> Unit
 ) {
     val context = LocalContext.current
-    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     navigator.getDataFromBackStackEntryFlow<Uri?>(
@@ -72,7 +71,28 @@ fun HomeScreen(
             imageUri ?: return@getDataFromBackStackEntryFlow
         )
     }
-    LaunchedEffect(Unit) {
+
+    CollectEffects(viewModel.effect, lifecycleOwner) { effect ->
+        when (effect) {
+            is ShareImage -> {
+                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                    type = "image/png"
+                    putExtra(Intent.EXTRA_STREAM, effect.uri)
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                }
+                context.startActivity(
+                    Intent.createChooser(
+                        shareIntent,
+                        context.getString(R.string.share_image)
+                    )
+                )
+            }
+
+            is ShowToast -> context.toast(effect.message)
+        }
+    }
+
+    uiState.image?.let {
         updateBarIconsState(
             listOf(
                 BarIconState(
@@ -86,31 +106,6 @@ fun HomeScreen(
             )
         )
     }
-
-    LaunchedEffect(Unit) {
-        lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-            viewModel.effect.collect { effect ->
-                when (effect) {
-                    is ShareImage -> {
-                        val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                            type = "image/png"
-                            putExtra(Intent.EXTRA_STREAM, effect.uri)
-                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                        }
-                        context.startActivity(
-                            Intent.createChooser(
-                                shareIntent,
-                                context.getString(R.string.share_image)
-                            )
-                        )
-                    }
-
-                    is ShowToast -> context.toast(effect.message)
-                }
-            }
-        }
-    }
-
 
     if (uiState.isPermissionNeeded) {
         CameraPermissionRequest(
@@ -162,16 +157,14 @@ fun HomeUi(
                 imageBitmap = imageBitmap,
                 onImageFiltersClick = onImageFiltersClick,
             )
-
             Row(
                 modifier = modifier
                     .fillMaxWidth(),
-                verticalAlignment = Alignment.Bottom
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Button(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .weight(1F),
+                    modifier = modifier,
                     onClick = onCameraClick
                 ) {
                     Icon(
@@ -181,9 +174,7 @@ fun HomeUi(
                 }
 
                 Button(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .weight(1F),
+                    modifier = modifier,
                     onClick = onGalleryClick
                 ) {
                     Icon(
@@ -193,9 +184,7 @@ fun HomeUi(
                 }
 
                 Button(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .weight(1F),
+                    modifier = modifier,
                     onClick = onNetworkClick
                 ) {
                     Icon(
@@ -241,7 +230,7 @@ fun MainImageFrame(
                 modifier = Modifier.align(Alignment.TopEnd)
             ) {
                 Icon(
-                    imageVector = Icons.Default.PhotoFilter,
+                    imageVector = Icons.Default.AutoFixHigh,
                     contentDescription = stringResource(R.string.photo_filters)
                 )
             }
