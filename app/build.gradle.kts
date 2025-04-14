@@ -1,5 +1,3 @@
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -21,15 +19,15 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        val localPropertiesFile = rootProject.file("local.properties")
-        val localProperties = Properties()
-        if (localPropertiesFile.exists()) {
-            localPropertiesFile.inputStream().use { stream ->
-                localProperties.load(stream)
-            }
+        buildConfigField(
+            "String",
+            "UNSPLASH_ACCESS_KEY",
+            "\"${project.findProperty("UNSPLASH_ACCESS_KEY") ?: ""}\""
+        )
+
+        if (!project.hasProperty("UNSPLASH_ACCESS_KEY") || project.findProperty("UNSPLASH_ACCESS_KEY") == "") {
+            throw GradleException("Missing UNSPLASH_ACCESS_KEY. Define it in gradle.properties or GitHub Secrets.")
         }
-        val accessKey = localProperties.getProperty("UNSPLASH_ACCESS_KEY", "")
-        buildConfigField("String", "UNSPLASH_ACCESS_KEY", "\"${accessKey}\"")
     }
 
     buildTypes {
@@ -94,7 +92,7 @@ dependencies {
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
     implementation(libs.androidx.camera.extensions)
-    implementation (libs.coil.compose)
+    implementation(libs.coil.compose)
     //okHttp
     implementation(libs.okhttp3.okhttp)
     implementation(libs.okhttp3.logging.interceptor)

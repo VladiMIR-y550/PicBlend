@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -21,12 +20,18 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Create local.properties
+      - name: Inject Unsplash API key into gradle.properties
         run: |
-          echo "UNSPLASH_ACCESS_KEY=${{ secrets.UNSPLASH_ACCESS_KEY }}" >> local.properties
+          echo "UNSPLASH_ACCESS_KEY=${{ secrets.UNSPLASH_ACCESS_KEY }}" >> gradle.properties
 
       - name: Set up Gradle cache
         uses: gradle/gradle-build-action@v2
 
       - name: Build app
         run: ./gradlew assembleDebug
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
