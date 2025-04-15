@@ -1,8 +1,16 @@
 # CameraX Image Capture App
 
+# PicBlend
+
+[![CI - main](https://github.com/VladiMIR-y550/PicBlend/actions/workflows/github-ci.yml/badge.svg?branch=main)](https://github.com/VladiMIR-y550/PicBlend/actions/workflows/github-ci.yml?query=branch%3Amain)
+[![CI - developer](https://github.com/VladiMIR-y550/PicBlend/actions/workflows/github-ci.yml/badge.svg?branch=developer)](https://github.com/VladiMIR-y550/PicBlend/actions/workflows/github-ci.yml?query=branch%3Adeveloper)
+
 ## Description
 
 This project is a mobile app that captures images using CameraX, applies real-time filters, and allows users to share photos. It supports both camera capture and gallery selection features.
+This project supports GitHub Actions for continuous integration.  
+You can also [view the latest build for `main`](https://github.com/VladiMIR-y550/PicBlend/actions/workflows/github-ci.yml?query=branch%3Amain)  
+and [view the latest build for `developer`](https://github.com/VladiMIR-y550/PicBlend/actions/workflows/github-ci.yml?query=branch%3Adeveloper).
 
 ## Technologies Used
 
@@ -24,10 +32,10 @@ This project is a mobile app that captures images using CameraX, applies real-ti
 2. Open the project in Android Studio.
 
 3. Sync Gradle dependencies:
-    - Open Android Studio and sync the project with Gradle files.
+   - Open Android Studio and sync the project with Gradle files.
 
 4. Set up the Unsplash API key:
-    - Go to [Unsplash Developers](https://unsplash.com/developers) to get your API key and add it to `gradle.properties`:
+   - Go to [Unsplash Developers](https://unsplash.com/developers) to get your API key and add it to `gradle.properties`:
     ```plaintext
     UNSPLASH_ACCESS_KEY="your_access_key"
     ```
