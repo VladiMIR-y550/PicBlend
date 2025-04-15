@@ -1,14 +1,10 @@
 name: github-ci CI
 
 on:
-  push:
-    branches:
-      - 'feature/*'
-      - 'bugfix/*'
-      - 'release/*'
   pull_request:
     branches:
       - 'main'
+      - 'developer'
   workflow_dispatch:
 
 jobs:
@@ -38,6 +34,9 @@ jobs:
 
       - name: Build app
         run: ./gradlew assembleDebug --stacktrace
+
+      - name: Show APK files
+        run: find app/build -name "*.apk"
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
