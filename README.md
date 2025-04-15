@@ -3,24 +3,22 @@
 # PicBlend
 
 [![CI - main](https://github.com/VladiMIR-y550/PicBlend/actions/workflows/github-ci.yml/badge.svg?branch=main)](https://github.com/VladiMIR-y550/PicBlend/actions/workflows/github-ci.yml?query=branch%3Amain)
-[![CI - developer](https://github.com/VladiMIR-y550/PicBlend/actions/workflows/github-ci.yml/badge.svg?branch=developer)](https://github.com/VladiMIR-y550/PicBlend/actions/workflows/github-ci.yml?query=branch%3Adeveloper)
 
 ## Description
 
 This project is a mobile app that captures images using CameraX, applies real-time filters, and allows users to share photos. It supports both camera capture and gallery selection features.
-This project supports GitHub Actions for continuous integration.  
+This project supports GitHub Actions for continuous integration.
 You can also [view the latest build for `main`](https://github.com/VladiMIR-y550/PicBlend/actions/workflows/github-ci.yml?query=branch%3Amain)  
-and [view the latest build for `developer`](https://github.com/VladiMIR-y550/PicBlend/actions/workflows/github-ci.yml?query=branch%3Adeveloper).
 
 ## Technologies Used
 
-- Android
-- CameraX
-- Jetpack Compose
-- Dagger Hilt
 - Kotlin
+- Jetpack Compose
+- MVVM
 - ViewModel & StateFlow
-- Unsplash API
+- Dagger Hilt
+- CameraX, Coil
+- Retrofit, OkHttp, Unsplash API
 
 ## Installation
 
@@ -50,10 +48,6 @@ Once the app is set up, you can:
 - Apply real-time filters to photos.
 - Save photos to your device's gallery.
 - Share photos through the app's share feature.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Contact
 
