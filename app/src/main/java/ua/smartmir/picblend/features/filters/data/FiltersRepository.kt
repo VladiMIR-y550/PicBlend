@@ -12,12 +12,9 @@ interface FiltersRepository {
     fun updateSelectedFilter(filterType: FilterType)
 
     class Base @Inject constructor() : FiltersRepository {
-        private val initialFilters = listOf(
-            Filter(isSelected = true, filterType = FilterType.None),
-            Filter(filterType = FilterType.INVERT),
-            Filter(filterType = FilterType.GRAYSCALE),
-            Filter(filterType = FilterType.SEPIA)
-        )
+        private val initialFilters = FilterType.filters.mapIndexed { index, filterType ->
+            Filter(isSelected = index == 0, filterType = filterType)
+        }
 
         private val _filtersFlow = MutableStateFlow(initialFilters)
         override val filterStatesFlow: StateFlow<List<Filter>> = _filtersFlow
