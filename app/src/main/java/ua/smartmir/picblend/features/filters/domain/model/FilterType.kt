@@ -5,6 +5,21 @@ import android.graphics.ColorMatrix
 sealed interface FilterType {
     fun colorMatrix(): ColorMatrix
 
+    companion object {
+        val filters = listOf(
+            None,
+            GRAYSCALE,
+            SEPIA,
+            INVERT,
+            SATURATE,
+            DESATURATE,
+            BRIGHTNESS,
+            CONTRAST,
+            TINT_BLUE,
+            TINT_RED
+        )
+    }
+
     abstract class Abstract() : FilterType {
         protected val matrix: ColorMatrix = ColorMatrix()
     }
@@ -51,6 +66,73 @@ sealed interface FilterType {
                     )
                 )
             }
+        }
+    }
+
+    object SATURATE : Abstract() {
+        override fun colorMatrix(): ColorMatrix {
+            return ColorMatrix().apply { setSaturation(1.5f) }
+        }
+    }
+
+    object DESATURATE : Abstract() {
+        override fun colorMatrix(): ColorMatrix {
+            return ColorMatrix().apply { setSaturation(0.3f) }
+        }
+    }
+
+    object BRIGHTNESS : Abstract() {
+        override fun colorMatrix(): ColorMatrix {
+            val brightness = 50f
+            return ColorMatrix(
+                floatArrayOf(
+                    1f, 0f, 0f, 0f, brightness,
+                    0f, 1f, 0f, 0f, brightness,
+                    0f, 0f, 1f, 0f, brightness,
+                    0f, 0f, 0f, 1f, 0f
+                )
+            )
+        }
+    }
+
+    object CONTRAST : Abstract() {
+        override fun colorMatrix(): ColorMatrix {
+            val contrast = 1.5f
+            val translate = (-0.5f * contrast + 0.5f) * 255f
+            return ColorMatrix(
+                floatArrayOf(
+                    contrast, 0f, 0f, 0f, translate,
+                    0f, contrast, 0f, 0f, translate,
+                    0f, 0f, contrast, 0f, translate,
+                    0f, 0f, 0f, 1f, 0f
+                )
+            )
+        }
+    }
+
+    object TINT_BLUE : Abstract() {
+        override fun colorMatrix(): ColorMatrix {
+            return ColorMatrix(
+                floatArrayOf(
+                    0.9f, 0f, 0f, 0f, 0f,
+                    0f, 0.9f, 0f, 0f, 0f,
+                    0f, 0f, 1.2f, 0f, 30f,
+                    0f, 0f, 0f, 1f, 0f
+                )
+            )
+        }
+    }
+
+    object TINT_RED : Abstract() {
+        override fun colorMatrix(): ColorMatrix {
+            return ColorMatrix(
+                floatArrayOf(
+                    1.2f, 0f, 0f, 0f, 30f,
+                    0f, 0.9f, 0f, 0f, 0f,
+                    0f, 0f, 0.9f, 0f, 0f,
+                    0f, 0f, 0f, 1f, 0f
+                )
+            )
         }
     }
 }
