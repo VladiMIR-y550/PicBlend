@@ -2,9 +2,13 @@ name: github-ci CI
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - 'feature/*'
+      - 'bugfix/*'
+      - 'release/*'
   pull_request:
-    branches: [ main ]
+    branches:
+      - 'main'
   workflow_dispatch:
 
 jobs:
@@ -23,16 +27,23 @@ jobs:
 
       - name: Inject Unsplash API key into gradle.properties
         run: |
+          echo "" >> gradle.properties
           echo "UNSPLASH_ACCESS_KEY=${{ secrets.UNSPLASH_ACCESS_KEY }}" >> gradle.properties
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v3
 
+      - name: Check dependencies
+        run: ./gradlew dependencies
+
       - name: Build app
-        run: ./gradlew assembleDebug
+        run: ./gradlew assembleDebug --stacktrace
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-apk
           path: app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Clean project
+        run: ./gradlew clean
