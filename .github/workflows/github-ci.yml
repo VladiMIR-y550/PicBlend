@@ -2,9 +2,13 @@ name: github-ci CI
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - 'feature/*'
+      - 'bugfix/*'
+      - 'release/*'
   pull_request:
-    branches: [ main ]
+    branches:
+      - 'main'
   workflow_dispatch:
 
 jobs:
