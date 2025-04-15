@@ -1,3 +1,40 @@
 <resources>
     <string name="app_name">PicBlend</string>
+    <string name="home">Main</string>
+    <string name="camera">Camera</string>
+    <string name="system_dialog_title_need_access">Permission is needed</string>
+    <string name="system_dialog_title_go_to_settings">Go to settings</string>
+    <string name="system_dialog_text_camera_access_required">In order to take a photo, we need access to your camera. Please grant access to continue.</string>
+    <string name="system_dialog_text_go_to_camera_app_settings">Camera permission is denied. Please go to the app settings and grant permission.</string>
+    <string name="ok">OK</string>
+    <string name="switch_camera">Switch camera</string>
+    <string name="take_photo">Take photo</string>
+    <string name="photo_filters">Photo filters</string>
+    <string name="photo_filter_name">Photo filter %s</string>
+    <string name="uploaded_image">Uploaded image</string>
+    <string name="default_image">Default image</string>
+    <string name="share_image">Share image</string>
+    <string name="witрout_description">Without description</string>
+    <string name="invalid_request">Invalid request</string>
+    <string name="unauthorized">Unauthorized</string>
+    <string name="server_error">Server error</string>
+    <string name="rate_limit_exceeded">Rate Limit Exceeded</string>
+    <string name="error">Error %s</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="rear_camera">Rear camera</string>
+    <string name="camera_facing_front_camera">Front camera</string>
+    <string name="camera_facing_unknown_camera">Unknown camera</string>
+    <string name="camera_type_unknown">Unknown</string>
+    <string name="camera_type_ultra_wide">Ultra-Wide</string>
+    <string name="camera_type_standard">Standard</string>
+    <string name="camera_type_telephoto">Telephoto</string>
+    <string name="focal_mm">%s mm</string>
+    <string name="dots" translatable="false">...</string>
+    <string name="camera_description">\"ID: %s | %s | %s (focal: %s mm)\"</string>
+    <string name="saved">Saved %s</string>
+    <string name="no_internet">No Internet Connection</string>
+    <string name="dialog_text_maybe_not_time_yet">Maybe not time yet?</string>
+    <string name="dialog_title_exit">Exit</string>
+    <string name="dialog_button_exit">EXIT</string>
+    <string name="add_photo_and_throw_on_some_filters">Add a photo from the camera, gallery, or web and throw on some filters ✨</string>
 </resources>

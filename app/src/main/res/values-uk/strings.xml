@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PicBlend</string>
+    <string name="home">Головна</string>
+    <string name="camera">Камера</string>
+    <string name="system_dialog_title_need_access">Потрібен дозвіл</string>
+    <string name="system_dialog_title_go_to_settings">Перейти до налаштувань</string>
+    <string name="system_dialog_text_camera_access_required">Для того, щоб зробити фото, нам потрібен доступ до вашої камери. Будь ласка, надайте доступ для продовження.</string>
+    <string name="system_dialog_text_go_to_camera_app_settings">Доступ до камери відхилено. Будь ласка, перейдіть до налаштувань додатку і надайте доступ.</string>
+    <string name="ok">Добре</string>
+    <string name="switch_camera">Переключити камеру</string>
+    <string name="take_photo">Зробити фотографію</string>
+    <string name="photo_filters">Фото фільтри</string>
+    <string name="photo_filter_name">Фото фільтр %s</string>
+    <string name="uploaded_image">Завантажена картинка</string>
+    <string name="default_image">Зображення за замовчуванням</string>
+    <string name="share_image">Поділитися зображенням</string>
+    <string name="witрout_description">Без опису</string>
+    <string name="invalid_request">Невірний запит</string>
+    <string name="unauthorized">Неавторизовано</string>
+    <string name="server_error">Помилка сервера</string>
+    <string name="rate_limit_exceeded">Перевищено ліміт запитів</string>
+    <string name="error">Помилка %s</string>
+    <string name="no_internet_connection">Немає підключення до інтернету</string>
+    <string name="rear_camera">Задня камера</string>
+    <string name="camera_facing_front_camera">Фронтальна камера</string>
+    <string name="camera_facing_unknown_camera">Невідома камера</string>
+    <string name="camera_type_unknown">Невідомо</string>
+    <string name="camera_type_ultra_wide">Надширококутна</string>
+    <string name="camera_type_standard">Стандартна</string>
+    <string name="camera_type_telephoto">Телеобʼєктив</string>
+    <string name="focal_mm">%s мм</string>
+    <string name="camera_description">ID: %s | %s | %s (focal: %s мм)</string>
+    <string name="saved">Збережено %s</string>
+    <string name="no_internet">Немає підключення до інтернету</string>
+    <string name="dialog_title_exit">Вихід</string>
+    <string name="dialog_text_maybe_not_time_yet">Може ще не час?</string>
+    <string name="dialog_button_exit">ВИЙТИ</string>
+    <string name="add_photo_and_throw_on_some_filters">Додай фото з камери, галереї або мережі та накрути фільтрів ✨</string>
+</resources>
